@@ -1,9 +1,7 @@
 package ethereum
 
 import (
-	"context"
 	nodeClient "github.com/datadaodevs/evm-etl/client/node"
-	"github.com/datadaodevs/go-service-framework/pool"
 	"github.com/datadaodevs/go-service-framework/util"
 )
 
@@ -13,56 +11,30 @@ const (
 	stageFetchTraces  = "fetch.traces"
 )
 
-type tmpConfig struct {
+// Config stores configurable properties of the driver
+type Config struct {
 	GCPProjectID   string
 	BucketName     string
 	DirectoryRange int
 }
 
+// EthereumDriver is the container for all ETL business logic
 type EthereumDriver struct {
 	client nodeClient.Client
 	logger util.Logger
-	config *tmpConfig
+	config *Config
 }
 
-func New(nodeClient nodeClient.Client, logger util.Logger) *EthereumDriver {
+// New constructs a new EthereumDriver
+func New(cfg *Config, nodeClient nodeClient.Client, logger util.Logger) *EthereumDriver {
 	return &EthereumDriver{
 		client: nodeClient,
 		logger: logger,
-		config: &tmpConfig{
-			GCPProjectID:   "rosetta-352219",
-			BucketName:     "coherent-test-new-poller-eth",
-			DirectoryRange: 10000,
-		},
+		config: cfg,
 	}
 }
 
-func (e *EthereumDriver) FetchSequence(index uint64) map[string]pool.Runner {
-	return map[string]pool.Runner{
-		stageFetchBlock:   e.queueGetBlockByNumber(index),
-		stageFetchReceipt: e.queueGetBlockReceiptsByNumber(index),
-		stageFetchTraces:  e.queueGetBlockTraceByNumber(index),
-	}
-}
-
+// Blockchain returns the name of the blockchain
 func (e *EthereumDriver) Blockchain() string {
 	return "ethereum"
-}
-
-func (e *EthereumDriver) queueGetBlockTraceByNumber(index uint64) pool.Runner {
-	return func(ctx context.Context) (interface{}, error) {
-		return e.getBlockTraceByNumber(ctx, index)
-	}
-}
-
-func (e *EthereumDriver) queueGetBlockByNumber(index uint64) pool.Runner {
-	return func(ctx context.Context) (interface{}, error) {
-		return e.getBlockByNumber(ctx, index)
-	}
-}
-
-func (e *EthereumDriver) queueGetBlockReceiptsByNumber(index uint64) pool.Runner {
-	return func(ctx context.Context) (interface{}, error) {
-		return e.getBlockReceiptsByNumber(ctx, index)
-	}
 }

@@ -7,6 +7,8 @@ import (
 	"github.com/datadaodevs/go-service-framework/pool"
 )
 
+// Accumulate combines a block, receipts, and traces from multiple protos into a single object, given a generic
+// result from the "fetch" step
 func (e *EthereumDriver) Accumulate(res interface{}) pool.Runner {
 	return func(ctx context.Context) (interface{}, error) {
 		set, ok := res.(pool.ResultSet)
@@ -35,6 +37,7 @@ func (e *EthereumDriver) Accumulate(res interface{}) pool.Runner {
 	}
 }
 
+// extractBlock extracts a block from the generic ResultSet from the fetch step
 func extractBlock(set pool.ResultSet) (*raw.Block, error) {
 	blockRes, ok := set[stageFetchBlock]
 	if !ok {
@@ -48,6 +51,7 @@ func extractBlock(set pool.ResultSet) (*raw.Block, error) {
 	return block, nil
 }
 
+// extractReceipts extracts receipts from the generic ResultSet from the fetch step
 func extractReceipts(set pool.ResultSet) ([]*raw.TransactionReceipt, error) {
 	receiptsRes, ok := set[stageFetchReceipt]
 	if !ok {
@@ -61,6 +65,7 @@ func extractReceipts(set pool.ResultSet) ([]*raw.TransactionReceipt, error) {
 	return receipts, nil
 }
 
+// extractTraces extracts traces from the generic ResultSet from the fetch step
 func extractTraces(set pool.ResultSet) ([]*raw.CallTrace, error) {
 	tracesRes, ok := set[stageFetchTraces]
 	if !ok {

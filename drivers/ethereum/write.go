@@ -18,12 +18,14 @@ const (
 	rangePrefix = "blocks_"
 )
 
+// callTraceNode is a local utility struct for performing BFS-style traversal of trace tree
 type callTraceNode struct {
 	CallTrace  *raw.CallTrace
 	Index      int64
 	ParentHash string
 }
 
+// Writers defines a set of parallelizable write steps for processing a block and its children
 func (e *EthereumDriver) Writers() []pool.FeedTransformer {
 	return []pool.FeedTransformer{
 		e.parquetAndUploadBlock,
@@ -33,6 +35,7 @@ func (e *EthereumDriver) Writers() []pool.FeedTransformer {
 	}
 }
 
+// parquetAndUploadBlock writes parquet to storage for a block
 func (e *EthereumDriver) parquetAndUploadBlock(res interface{}) pool.Runner {
 	return func(ctx context.Context) (interface{}, error) {
 		block, blockNumber, err := unpackBlock(res)
@@ -50,6 +53,7 @@ func (e *EthereumDriver) parquetAndUploadBlock(res interface{}) pool.Runner {
 	}
 }
 
+// parquetAndUploadTransactions writes parquet to storage for transactions
 func (e *EthereumDriver) parquetAndUploadTransactions(res interface{}) pool.Runner {
 	return func(ctx context.Context) (interface{}, error) {
 		block, blockNumber, err := unpackBlock(res)
@@ -81,6 +85,7 @@ func (e *EthereumDriver) parquetAndUploadTransactions(res interface{}) pool.Runn
 	}
 }
 
+// parquetAndUploadTraces writes parquet to storage for traces
 func (e *EthereumDriver) parquetAndUploadTraces(res interface{}) pool.Runner {
 	return func(ctx context.Context) (interface{}, error) {
 		block, blockNumber, err := unpackBlock(res)
@@ -110,6 +115,7 @@ func (e *EthereumDriver) parquetAndUploadTraces(res interface{}) pool.Runner {
 	}
 }
 
+// parquetAndUploadLogs writes parquet to storage for logs
 func (e *EthereumDriver) parquetAndUploadLogs(res interface{}) pool.Runner {
 	return func(ctx context.Context) (interface{}, error) {
 		block, blockNumber, err := unpackBlock(res)
@@ -182,6 +188,7 @@ func (e *EthereumDriver) parquetAndUploadLogs(res interface{}) pool.Runner {
 	}
 }
 
+// unpackBlock pulls a block out of the generic response from the accumulator
 func unpackBlock(res interface{}) (*raw.Data, int64, error) {
 	obj, ok := res.(*raw.Data)
 	if !ok {
@@ -197,6 +204,7 @@ func unpackBlock(res interface{}) (*raw.Data, int64, error) {
 	return obj, blockNumber, nil
 }
 
+// write writes a single parquet to GCS storage
 func (e *EthereumDriver) write(ctx context.Context, input interface{}, mapToStruct interface{}, filename string) error {
 	gw, err := gcs.NewGcsFileWriter(
 		ctx,
@@ -225,6 +233,7 @@ func (e *EthereumDriver) write(ctx context.Context, input interface{}, mapToStru
 	return nil
 }
 
+// write writes a mutliple parquets to GCS storage
 func (e *EthereumDriver) writeMany(ctx context.Context, input []interface{}, mapToStruct interface{}, filename string) error {
 	gw, err := gcs.NewGcsFileWriter(
 		ctx,
@@ -255,6 +264,7 @@ func (e *EthereumDriver) writeMany(ctx context.Context, input []interface{}, map
 	return nil
 }
 
+// rangeName generates a well-formed name for a blocks directory, given a height and a range
 func rangeName(height int64, directoryRange int) string {
 	rangeSize := int64(directoryRange)
 	bottom := (height / rangeSize) * rangeSize

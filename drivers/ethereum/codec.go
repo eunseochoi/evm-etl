@@ -9,6 +9,7 @@ import (
 	"github.com/pkg/errors"
 )
 
+// ProtoBlockToParquet converts a block proto to parquet
 func ProtoBlockToParquet(in *raw.Block) *ParquetBlock {
 	out := ParquetBlock{
 		Number:           in.Number,
@@ -39,6 +40,7 @@ func ProtoBlockToParquet(in *raw.Block) *ParquetBlock {
 	return &out
 }
 
+// ProtoTransactionToParquet converts a transaction proto to parquet, given a transaction and receipt
 func ProtoTransactionToParquet(inTx *raw.Transaction, inReceipt *raw.TransactionReceipt) (*ParquetTransaction, error) {
 	out := ParquetTransaction{
 		BlockNumber:          inTx.BlockNumber,
@@ -76,6 +78,7 @@ func ProtoTransactionToParquet(inTx *raw.Transaction, inReceipt *raw.Transaction
 	return &out, nil
 }
 
+// ProtoLogToParquet converts a log proto to parquet
 func ProtoLogToParquet(in *raw.Log) *ParquetLog {
 	out := ParquetLog{
 		BlockNumber:      in.BlockNumber,
@@ -94,6 +97,7 @@ func ProtoLogToParquet(in *raw.Log) *ParquetLog {
 	return &out
 }
 
+// ProtoTraceToParquet converts a trace proto to parquet, given a trace, a transaction, and other supplemental data
 func ProtoTraceToParquet(inTrace *raw.CallTrace, inTransaction *raw.Transaction, hash string, parentHash string, index int64) *ParquetTrace {
 	return &ParquetTrace{
 		BlockNumber:     inTransaction.BlockNumber,
@@ -115,6 +119,7 @@ func ProtoTraceToParquet(inTrace *raw.CallTrace, inTransaction *raw.Transaction,
 	}
 }
 
+// hashCallTrace hashes a trace proto
 func hashCallTrace(callTrace *raw.CallTrace) string {
 	hasher := sha256.New()
 	hasher.Write([]byte(fmt.Sprintf("%v", callTrace)))

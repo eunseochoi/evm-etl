@@ -1,5 +1,6 @@
 package ethereum
 
+// ParquetBlock represents a block in parquet form
 type ParquetBlock struct {
 	Number           string   `parquet:"name=block_number, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
 	Hash             string   `parquet:"name=block_hash, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
@@ -23,6 +24,7 @@ type ParquetBlock struct {
 	MixHash          string   `parquet:"name=mix_hash, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
 }
 
+// ParquetTransaction represents a transaction in parquet form
 type ParquetTransaction struct {
 	BlockNumber          string   `parquet:"name=block_number, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
 	BlockHash            string   `parquet:"name=block_hash, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
@@ -49,6 +51,7 @@ type ParquetTransaction struct {
 	AccessList           []string `parquet:"name=access_list, type=MAP, convertedtype=LIST, valuetype=BYTE_ARRAY, valueconvertedtype=UTF8"`
 }
 
+// ParquetLog represents a log in parquet form
 type ParquetLog struct {
 	BlockNumber      string   `parquet:"name=block_number, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
 	BlockHash        string   `parquet:"name=block_hash, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
@@ -61,6 +64,7 @@ type ParquetLog struct {
 	Removed          bool     `parquet:"name=removed, type=BOOLEAN"`
 }
 
+// ParquetTrace represents a trace in parquet form
 type ParquetTrace struct {
 	BlockNumber     string `parquet:"name=block_number, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
 	BlockHash       string `parquet:"name=block_hash, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`

@@ -5,6 +5,7 @@ import (
 	"errors"
 )
 
+// IsValidBlock checks the given block's parent hash against the hash of the previous block
 func (e *EthereumDriver) IsValidBlock(ctx context.Context, index uint64) error {
 	currentBlock, err := e.getBlockByNumber(ctx, index)
 	if err != nil {
