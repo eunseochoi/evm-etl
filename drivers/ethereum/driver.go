@@ -4,6 +4,7 @@ import (
 	"context"
 	nodeClient "github.com/datadaodevs/evm-etl/client/node"
 	"github.com/datadaodevs/go-service-framework/pool"
+	"github.com/datadaodevs/go-service-framework/util"
 )
 
 const (
@@ -20,11 +21,11 @@ type tmpConfig struct {
 
 type EthereumDriver struct {
 	client nodeClient.Client
-	logger utils.Logger
+	logger util.Logger
 	config *tmpConfig
 }
 
-func New(nodeClient nodeClient.Client, logger utils.Logger) *EthereumDriver {
+func New(nodeClient nodeClient.Client, logger util.Logger) *EthereumDriver {
 	return &EthereumDriver{
 		client: nodeClient,
 		logger: logger,

@@ -69,7 +69,7 @@ func getNode(config *Config, blockchain constants.Blockchain) string {
 	return ""
 }
 
-func NewClient(config *Config, logger utils.Logger) (*client, error) {
+func NewClient(config *Config, logger util.Logger) (*client, error) {
 	url := getNode(config, config.Blockchain)
 	parsedClient, err := ethclient.Dial(url)
 	if err != nil {
@@ -89,7 +89,7 @@ func NewClient(config *Config, logger utils.Logger) (*client, error) {
 	}, nil
 }
 
-func MustNewClient(config *Config, logger utils.Logger) *client {
+func MustNewClient(config *Config, logger util.Logger) *client {
 	client, err := NewClient(config, logger)
 	if err != nil {
 		logger.Fatal("Failed to instantiate node client")
