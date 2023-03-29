@@ -28,7 +28,7 @@ func (e *EthereumDriver) GetChainTipNumber(ctx context.Context) (uint64, error) 
 
 // getBlockByNumber fetches a full block by number
 func (e *EthereumDriver) getBlockByNumber(ctx context.Context, index uint64) (*raw.Block, error) {
-	block, err := e.client.EthGetBlockByNumber(index)
+	block, err := e.client.EthGetBlockByNumber(ctx, index)
 	if err != nil {
 		e.logger.Errorf("error thrown while trying to retrieve block: %d, %v", index, err)
 		return nil, err
@@ -39,7 +39,7 @@ func (e *EthereumDriver) getBlockByNumber(ctx context.Context, index uint64) (*r
 
 // getBlockTraceByNumber fetches all traces for a given block
 func (e *EthereumDriver) getBlockTraceByNumber(ctx context.Context, index uint64) ([]*raw.CallTrace, error) {
-	traces, err := e.client.DebugTraceBlock(index)
+	traces, err := e.client.DebugTraceBlock(ctx, index)
 	if err != nil {
 		e.logger.Errorf("error thrown while trying to retrieve block trace: %d, %v", index, err)
 		return nil, err
@@ -50,7 +50,7 @@ func (e *EthereumDriver) getBlockTraceByNumber(ctx context.Context, index uint64
 
 // getBlockReceiptsByNumber fetches a set of block receipts for a given block
 func (e *EthereumDriver) getBlockReceiptsByNumber(ctx context.Context, index uint64) ([]*raw.TransactionReceipt, error) {
-	receipts, err := e.client.GetBlockReceipt(index)
+	receipts, err := e.client.GetBlockReceipt(ctx, index)
 	if err != nil {
 		e.logger.Errorf("error thrown while trying to retrieve block receipts: %d, %v", index, err)
 		return nil, err
