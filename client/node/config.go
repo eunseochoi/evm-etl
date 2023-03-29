@@ -1,47 +1,39 @@
 package node
 
 import (
+	"github.com/caarlos0/env/v7"
 	"github.com/datadaodevs/go-service-framework/constants"
-	"github.com/spf13/viper"
+	"github.com/datadaodevs/go-service-framework/util"
 	"time"
 )
 
+// Config holds configurable properties for node client
 type Config struct {
-	Blockchain constants.Blockchain
-
-	EthNodeRPC                string
-	PolyNodeRPC               string
-	GoerliNodeRPC             string
-	OptNodeRPC                string
-	EnrichTransactionsTimeout time.Duration
-
-	FetchBlockTimeout time.Duration
+	Blockchain                constants.Blockchain `env:"blockchain,required"`
+	NodeHost                  string               `env:"node_host,required"`
+	EnrichTransactionsTimeout time.Duration        `env:"enrich_transactions_timeout" envDefault:"14s"`
+	FetchBlockTimeout         time.Duration        `env:"fetch_block_timeout" envDefault:"14s"`
+	RPCTimeout                time.Duration        `env:"rpc_timeout" envDefault:"20000ms"`
+	RPCRetries                int                  `env:"rpc_retries" envDefault:"2"`
 }
 
-func NewConfig() *Config {
-	setDefaults()
+// ParseConfig parses config from env vars
+func ParseConfig() (*Config, error) {
+	var cfg Config
 
-	viper.AutomaticEnv()
-	config := Config{
-		Blockchain:                constants.Blockchain(viper.GetString("blockchain")),
-		EthNodeRPC:                viper.GetString("ethereum_node_rpc_endpoint"),
-		OptNodeRPC:                viper.GetString("optimism_node_rpc_endpoint"),
-		PolyNodeRPC:               viper.GetString("polygon_node_rpc_endpoint"),
-		GoerliNodeRPC:             viper.GetString("goerli_node_rpc_endpoint"),
-		EnrichTransactionsTimeout: viper.GetDuration("enrich_transactions_timeout"),
-		FetchBlockTimeout:         viper.GetDuration("fetch_block_timeout"),
+	if err := env.Parse(&cfg); err != nil {
+		return nil, err
 	}
 
-	return &config
+	return &cfg, nil
 }
 
-func setDefaults() {
-	viper.SetDefault("ethereum_node_rpc_endpoint", "https://withered-red-thunder.quiknode.pro/8b87fd6f08cdd14442dc22fbe7bd7a4d1ba8b94a/")
-	viper.SetDefault("optimism_node_rpc_endpoint", "https://ultra-proud-emerald.optimism.quiknode.pro/6d6d3edf4f0b58d5d24b3847ce479fe247f642cf/")
-	viper.SetDefault("polygon_node_rpc_endpoint", "https://wider-fabled-wildflower.matic.quiknode.pro/60af747f09cd941ca046f0f4a90ddb65ee90cb96/")
-	viper.SetDefault("goerli_node_rpc_endpoint", "https://chaotic-nameless-night.ethereum-goerli.quiknode.pro/626d2a56cc59d9f182e2725d1acd4861a38888ce/")
-	viper.SetDefault("rpc_retries", 2)
-	viper.SetDefault("rpc_timeout", "20000ms")
-	viper.SetDefault("fetch_block_timeout", "14s")
-	viper.SetDefault("blockchain", "ethereum")
+// MustParseConfig parses config from env vars, with fatal exit on error
+func MustParseConfig(logger util.Logger) *Config {
+	cfg, err := ParseConfig()
+	if err != nil {
+		logger.Fatalf("Failed to parse node client config: %v", err)
+	}
+
+	return cfg
 }
