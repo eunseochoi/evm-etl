@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/datadaodevs/evm-etl/protos/go/protos/evm/raw"
+	"github.com/datadaodevs/evm-etl/shared/util"
 	"github.com/datadaodevs/go-service-framework/pool"
 	"github.com/pkg/errors"
 	"github.com/xitongsys/parquet-go-source/gcs"
@@ -43,7 +44,7 @@ func (e *EthereumDriver) parquetAndUploadBlock(res interface{}) pool.Runner {
 			return nil, err
 		}
 
-		filename := fmt.Sprintf("blocks/%s/%d.parquet", rangeName(blockNumber, e.config.DirectoryRange), blockNumber)
+		filename := fmt.Sprintf("blocks/%s/%d.parquet", util.RangeName(blockNumber, e.config.DirectoryRange), blockNumber)
 		if err := e.write(ctx, ProtoBlockToParquet(block.Block), &ParquetBlock{}, filename); err != nil {
 			return nil, err
 		}
@@ -74,7 +75,7 @@ func (e *EthereumDriver) parquetAndUploadTransactions(res interface{}) pool.Runn
 			outputs = append(outputs, parquetTransaction)
 		}
 
-		filename := fmt.Sprintf("transactions/%s/%d.parquet", rangeName(blockNumber, e.config.DirectoryRange), blockNumber)
+		filename := fmt.Sprintf("transactions/%s/%d.parquet", util.RangeName(blockNumber, e.config.DirectoryRange), blockNumber)
 
 		if err := e.writeMany(ctx, outputs, &ParquetTransaction{}, filename); err != nil {
 			return nil, err
@@ -104,7 +105,7 @@ func (e *EthereumDriver) parquetAndUploadTraces(res interface{}) pool.Runner {
 			}
 		}
 
-		filename := fmt.Sprintf("logs/%s/%d.parquet", rangeName(blockNumber, e.config.DirectoryRange), blockNumber)
+		filename := fmt.Sprintf("logs/%s/%d.parquet", util.RangeName(blockNumber, e.config.DirectoryRange), blockNumber)
 
 		if err := e.writeMany(ctx, outputs, &ParquetLog{}, filename); err != nil {
 			return nil, err
@@ -177,7 +178,7 @@ func (e *EthereumDriver) parquetAndUploadLogs(res interface{}) pool.Runner {
 		}
 		bfsWG.Wait()
 
-		filename := fmt.Sprintf("traces/%s/%d.parquet", rangeName(blockNumber, e.config.DirectoryRange), blockNumber)
+		filename := fmt.Sprintf("traces/%s/%d.parquet", util.RangeName(blockNumber, e.config.DirectoryRange), blockNumber)
 		if err := e.writeMany(ctx, outputs, &ParquetTrace{}, filename); err != nil {
 			return nil, err
 		}
@@ -262,12 +263,4 @@ func (e *EthereumDriver) writeMany(ctx context.Context, input []interface{}, map
 		return errors.Errorf("WriteStop error: %v", err)
 	}
 	return nil
-}
-
-// rangeName generates a well-formed name for a blocks directory, given a height and a range
-func rangeName(height int64, directoryRange int) string {
-	rangeSize := int64(directoryRange)
-	bottom := (height / rangeSize) * rangeSize
-	top := bottom + rangeSize - 1
-	return fmt.Sprintf("%s%d-%d", rangePrefix, bottom, top)
 }
