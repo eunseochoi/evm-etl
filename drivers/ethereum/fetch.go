@@ -7,11 +7,11 @@ import (
 )
 
 // FetchSequence defines the parallelizable steps in the fetch sequence
-func (e *EthereumDriver) FetchSequence(index uint64) map[string]pool.Runner {
+func (e *EthereumDriver) FetchSequence(blockHeight uint64) map[string]pool.Runner {
 	return map[string]pool.Runner{
-		stageFetchBlock:   e.queueGetBlockByNumber(index),
-		stageFetchReceipt: e.queueGetBlockReceiptsByNumber(index),
-		stageFetchTraces:  e.queueGetBlockTraceByNumber(index),
+		stageFetchBlock:   e.queueGetBlockByNumber(blockHeight),
+		stageFetchReceipt: e.queueGetBlockReceiptsByNumber(blockHeight),
+		stageFetchTraces:  e.queueGetBlockTraceByNumber(blockHeight),
 	}
 }
 
@@ -27,10 +27,10 @@ func (e *EthereumDriver) GetChainTipNumber(ctx context.Context) (uint64, error) 
 }
 
 // getBlockByNumber fetches a full block by number
-func (e *EthereumDriver) getBlockByNumber(ctx context.Context, index uint64) (*raw.Block, error) {
-	block, err := e.client.EthGetBlockByNumber(ctx, index)
+func (e *EthereumDriver) getBlockByNumber(ctx context.Context, blockHeight uint64) (*raw.Block, error) {
+	block, err := e.client.EthGetBlockByNumber(ctx, blockHeight)
 	if err != nil {
-		e.logger.Errorf("error thrown while trying to retrieve block: %d, %v", index, err)
+		e.logger.Errorf("error thrown while trying to retrieve block: %d, %v", blockHeight, err)
 		return nil, err
 	}
 
@@ -38,10 +38,10 @@ func (e *EthereumDriver) getBlockByNumber(ctx context.Context, index uint64) (*r
 }
 
 // getBlockTraceByNumber fetches all traces for a given block
-func (e *EthereumDriver) getBlockTraceByNumber(ctx context.Context, index uint64) ([]*raw.CallTrace, error) {
-	traces, err := e.client.DebugTraceBlock(ctx, index)
+func (e *EthereumDriver) getBlockTraceByNumber(ctx context.Context, blockHeight uint64) ([]*raw.CallTrace, error) {
+	traces, err := e.client.DebugTraceBlock(ctx, blockHeight)
 	if err != nil {
-		e.logger.Errorf("error thrown while trying to retrieve block trace: %d, %v", index, err)
+		e.logger.Errorf("error thrown while trying to retrieve block trace: %d, %v", blockHeight, err)
 		return nil, err
 	}
 
@@ -49,10 +49,10 @@ func (e *EthereumDriver) getBlockTraceByNumber(ctx context.Context, index uint64
 }
 
 // getBlockReceiptsByNumber fetches a set of block receipts for a given block
-func (e *EthereumDriver) getBlockReceiptsByNumber(ctx context.Context, index uint64) ([]*raw.TransactionReceipt, error) {
-	receipts, err := e.client.GetBlockReceipt(ctx, index)
+func (e *EthereumDriver) getBlockReceiptsByNumber(ctx context.Context, blockHeight uint64) ([]*raw.TransactionReceipt, error) {
+	receipts, err := e.client.GetBlockReceipt(ctx, blockHeight)
 	if err != nil {
-		e.logger.Errorf("error thrown while trying to retrieve block receipts: %d, %v", index, err)
+		e.logger.Errorf("error thrown while trying to retrieve block receipts: %d, %v", blockHeight, err)
 		return nil, err
 	}
 
@@ -60,22 +60,22 @@ func (e *EthereumDriver) getBlockReceiptsByNumber(ctx context.Context, index uin
 }
 
 // queueGetBlockTraceByNumber wraps GetBlockTraceByNumber in a queueable Runner func
-func (e *EthereumDriver) queueGetBlockTraceByNumber(index uint64) pool.Runner {
+func (e *EthereumDriver) queueGetBlockTraceByNumber(blockHeight uint64) pool.Runner {
 	return func(ctx context.Context) (interface{}, error) {
-		return e.getBlockTraceByNumber(ctx, index)
+		return e.getBlockTraceByNumber(ctx, blockHeight)
 	}
 }
 
 // queueGetBlockByNumber wraps GetBlockByNumber in a queueable Runner func
-func (e *EthereumDriver) queueGetBlockByNumber(index uint64) pool.Runner {
+func (e *EthereumDriver) queueGetBlockByNumber(blockHeight uint64) pool.Runner {
 	return func(ctx context.Context) (interface{}, error) {
-		return e.getBlockByNumber(ctx, index)
+		return e.getBlockByNumber(ctx, blockHeight)
 	}
 }
 
 // queueGetBlockReceiptsByNumber wraps GetBlockReceiptsByNumber in a queueable Runner func
-func (e *EthereumDriver) queueGetBlockReceiptsByNumber(index uint64) pool.Runner {
+func (e *EthereumDriver) queueGetBlockReceiptsByNumber(blockHeight uint64) pool.Runner {
 	return func(ctx context.Context) (interface{}, error) {
-		return e.getBlockReceiptsByNumber(ctx, index)
+		return e.getBlockReceiptsByNumber(ctx, blockHeight)
 	}
 }
