@@ -5,13 +5,14 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"github.com/datadaodevs/evm-etl/protos/go/protos/evm/raw"
+	model "github.com/datadaodevs/evm-etl/model/ethereum"
+	protos "github.com/datadaodevs/evm-etl/protos/go/protos/chains/ethereum"
 	"github.com/pkg/errors"
 )
 
 // ProtoBlockToParquet converts a block proto to parquet
-func ProtoBlockToParquet(in *raw.Block) *ParquetBlock {
-	out := ParquetBlock{
+func ProtoBlockToParquet(in *protos.Block) *model.ParquetBlock {
+	out := model.ParquetBlock{
 		Number:           in.Number,
 		Hash:             in.Hash,
 		ParentHash:       in.ParentHash,
@@ -41,8 +42,8 @@ func ProtoBlockToParquet(in *raw.Block) *ParquetBlock {
 }
 
 // ProtoTransactionToParquet converts a transaction proto to parquet, given a transaction and receipt
-func ProtoTransactionToParquet(inTx *raw.Transaction, inReceipt *raw.TransactionReceipt) (*ParquetTransaction, error) {
-	out := ParquetTransaction{
+func ProtoTransactionToParquet(inTx *protos.Transaction, inReceipt *protos.TransactionReceipt) (*model.ParquetTransaction, error) {
+	out := model.ParquetTransaction{
 		BlockNumber:          inTx.BlockNumber,
 		BlockHash:            inTx.BlockHash,
 		Hash:                 inTx.Hash,
@@ -79,8 +80,8 @@ func ProtoTransactionToParquet(inTx *raw.Transaction, inReceipt *raw.Transaction
 }
 
 // ProtoLogToParquet converts a log proto to parquet
-func ProtoLogToParquet(in *raw.Log) *ParquetLog {
-	out := ParquetLog{
+func ProtoLogToParquet(in *protos.Log) *model.ParquetLog {
+	out := model.ParquetLog{
 		BlockNumber:      in.BlockNumber,
 		BlockHash:        in.BlockHash,
 		TransactionHash:  in.TransactionHash,
@@ -98,8 +99,8 @@ func ProtoLogToParquet(in *raw.Log) *ParquetLog {
 }
 
 // ProtoTraceToParquet converts a trace proto to parquet, given a trace, a transaction, and other supplemental data
-func ProtoTraceToParquet(inTrace *raw.CallTrace, inTransaction *raw.Transaction, hash string, parentHash string, index int64) *ParquetTrace {
-	return &ParquetTrace{
+func ProtoTraceToParquet(inTrace *protos.CallTrace, inTransaction *protos.Transaction, hash string, parentHash string, index int64) *model.ParquetTrace {
+	return &model.ParquetTrace{
 		BlockNumber:     inTransaction.BlockNumber,
 		BlockHash:       inTransaction.BlockHash,
 		TransactionHash: inTransaction.Hash,
@@ -120,7 +121,7 @@ func ProtoTraceToParquet(inTrace *raw.CallTrace, inTransaction *raw.Transaction,
 }
 
 // hashCallTrace hashes a trace proto
-func hashCallTrace(callTrace *raw.CallTrace) string {
+func hashCallTrace(callTrace *protos.CallTrace) string {
 	hasher := sha256.New()
 	hasher.Write([]byte(fmt.Sprintf("%v", callTrace)))
 

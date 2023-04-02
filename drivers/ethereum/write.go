@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	model "github.com/datadaodevs/evm-etl/model/ethereum"
-	"github.com/datadaodevs/evm-etl/protos/go/protos/evm/raw"
+	protos "github.com/datadaodevs/evm-etl/protos/go/protos/chains/ethereum"
 	"github.com/datadaodevs/evm-etl/shared/util"
 	"github.com/datadaodevs/go-service-framework/pool"
 	"github.com/pkg/errors"
@@ -20,7 +20,7 @@ const (
 
 // callTraceNode is a local utility struct for performing BFS-style traversal of trace tree
 type callTraceNode struct {
-	CallTrace  *raw.CallTrace
+	CallTrace  *protos.CallTrace
 	Index      int64
 	ParentHash string
 }
@@ -138,7 +138,7 @@ func (e *EthereumDriver) parquetAndUploadTraces(res interface{}) pool.Runner {
 		mutex := sync.Mutex{}
 		for i, callTrace := range block.CallTraces {
 			bfsWG.Add(1)
-			go func(index int, callTrace *raw.CallTrace) {
+			go func(index int, callTrace *protos.CallTrace) {
 				defer bfsWG.Done()
 
 				queue := make([]*callTraceNode, 0)
@@ -195,8 +195,8 @@ func (e *EthereumDriver) parquetAndUploadTraces(res interface{}) pool.Runner {
 }
 
 // unpackBlock pulls a block out of the generic response from the accumulator
-func unpackBlock(res interface{}) (*raw.Data, uint64, error) {
-	obj, ok := res.(*raw.Data)
+func unpackBlock(res interface{}) (*protos.Data, uint64, error) {
+	obj, ok := res.(*protos.Data)
 	if !ok {
 		return nil, 0, errors.New("Result is not correct type")
 	}
@@ -210,8 +210,8 @@ func unpackBlock(res interface{}) (*raw.Data, uint64, error) {
 	return obj, uint64(blockNumber), nil
 }
 
-func filterNonTraceTransactions(in []*raw.Transaction) []*raw.Transaction {
-	var filteredTransactions []*raw.Transaction
+func filterNonTraceTransactions(in []*protos.Transaction) []*protos.Transaction {
+	var filteredTransactions []*protos.Transaction
 	for _, tx := range in {
 		if tx.From != nullAddress || tx.To != nullAddress {
 			filteredTransactions = append(filteredTransactions, tx)

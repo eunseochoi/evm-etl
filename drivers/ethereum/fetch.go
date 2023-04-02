@@ -2,7 +2,7 @@ package ethereum
 
 import (
 	"context"
-	"github.com/datadaodevs/evm-etl/protos/go/protos/evm/raw"
+	protos "github.com/datadaodevs/evm-etl/protos/go/protos/chains/ethereum"
 	"github.com/datadaodevs/go-service-framework/pool"
 	"github.com/datadaodevs/go-service-framework/retry"
 )
@@ -36,8 +36,8 @@ func (e *EthereumDriver) GetChainTipNumber(ctx context.Context) (uint64, error) 
 }
 
 // getBlockByNumber fetches a full block by number
-func (e *EthereumDriver) getBlockByNumber(ctx context.Context, blockHeight uint64) (*raw.Block, error) {
-	var block *raw.Block
+func (e *EthereumDriver) getBlockByNumber(ctx context.Context, blockHeight uint64) (*protos.Block, error) {
+	var block *protos.Block
 	var err error
 	if err := retry.Exec(e.config.MaxRetries, func() error {
 		block, err = e.nodeClient.EthGetBlockByNumber(ctx, blockHeight)
@@ -56,8 +56,8 @@ func (e *EthereumDriver) getBlockByNumber(ctx context.Context, blockHeight uint6
 }
 
 // getBlockTraceByNumber fetches all traces for a given block
-func (e *EthereumDriver) getBlockTraceByNumber(ctx context.Context, blockHeight uint64) ([]*raw.CallTrace, error) {
-	var traces []*raw.CallTrace
+func (e *EthereumDriver) getBlockTraceByNumber(ctx context.Context, blockHeight uint64) ([]*protos.CallTrace, error) {
+	var traces []*protos.CallTrace
 	var err error
 	if err := retry.Exec(e.config.MaxRetries, func() error {
 		traces, err = e.nodeClient.DebugTraceBlock(ctx, blockHeight)
@@ -76,8 +76,8 @@ func (e *EthereumDriver) getBlockTraceByNumber(ctx context.Context, blockHeight 
 }
 
 // getBlockReceiptsByNumber fetches a set of block receipts for a given block
-func (e *EthereumDriver) getBlockReceiptsByNumber(ctx context.Context, blockHeight uint64) ([]*raw.TransactionReceipt, error) {
-	var receipts []*raw.TransactionReceipt
+func (e *EthereumDriver) getBlockReceiptsByNumber(ctx context.Context, blockHeight uint64) ([]*protos.TransactionReceipt, error) {
+	var receipts []*protos.TransactionReceipt
 	var err error
 	if err := retry.Exec(e.config.MaxRetries, func() error {
 		receipts, err = e.nodeClient.GetBlockReceipt(ctx, blockHeight)

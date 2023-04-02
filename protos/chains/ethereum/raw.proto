@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-package sh.datadaodevs.blockchain.evm.raw;
-option go_package = "github.com/datadaodevs/evm-etl/protos/go/evm/raw";
+package sh.datadaodevs.blockchain;
+option go_package = "github.com/datadaodevs/evm-etl/protos/go/chains/ethereum";
 
 message Data {
   Block block = 1;

@@ -3,7 +3,7 @@ package ethereum
 import (
 	"context"
 	"errors"
-	"github.com/datadaodevs/evm-etl/protos/go/protos/evm/raw"
+	protos "github.com/datadaodevs/evm-etl/protos/go/protos/chains/ethereum"
 	"github.com/datadaodevs/go-service-framework/pool"
 )
 
@@ -29,7 +29,7 @@ func (e *EthereumDriver) Accumulate(res interface{}) pool.Runner {
 			return nil, err
 		}
 
-		return &raw.Data{
+		return &protos.Data{
 			Block:               block,
 			TransactionReceipts: receipts,
 			CallTraces:          traces,
@@ -38,12 +38,12 @@ func (e *EthereumDriver) Accumulate(res interface{}) pool.Runner {
 }
 
 // extractBlock extracts a block from the generic ResultSet from the fetch step
-func extractBlock(set pool.ResultSet) (*raw.Block, error) {
+func extractBlock(set pool.ResultSet) (*protos.Block, error) {
 	blockRes, ok := set[stageFetchBlock]
 	if !ok {
 		return nil, errors.New("No block data")
 	}
-	block, ok := blockRes.(*raw.Block)
+	block, ok := blockRes.(*protos.Block)
 	if !ok {
 		return nil, errors.New("Incorrect data type for block")
 	}
@@ -52,12 +52,12 @@ func extractBlock(set pool.ResultSet) (*raw.Block, error) {
 }
 
 // extractReceipts extracts receipts from the generic ResultSet from the fetch step
-func extractReceipts(set pool.ResultSet) ([]*raw.TransactionReceipt, error) {
+func extractReceipts(set pool.ResultSet) ([]*protos.TransactionReceipt, error) {
 	receiptsRes, ok := set[stageFetchReceipt]
 	if !ok {
 		return nil, errors.New("No receipts data")
 	}
-	receipts, ok := receiptsRes.([]*raw.TransactionReceipt)
+	receipts, ok := receiptsRes.([]*protos.TransactionReceipt)
 	if !ok {
 		return nil, errors.New("Incorrect data type for transaction receipts")
 	}
@@ -66,12 +66,12 @@ func extractReceipts(set pool.ResultSet) ([]*raw.TransactionReceipt, error) {
 }
 
 // extractTraces extracts traces from the generic ResultSet from the fetch step
-func extractTraces(set pool.ResultSet) ([]*raw.CallTrace, error) {
+func extractTraces(set pool.ResultSet) ([]*protos.CallTrace, error) {
 	tracesRes, ok := set[stageFetchTraces]
 	if !ok {
 		return nil, errors.New("No traces data")
 	}
-	traces, ok := tracesRes.([]*raw.CallTrace)
+	traces, ok := tracesRes.([]*protos.CallTrace)
 	if !ok {
 		return nil, errors.New("Incorrect data type for traces")
 	}

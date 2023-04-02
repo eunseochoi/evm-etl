@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/datadaodevs/evm-etl/protos/go/protos/evm/raw"
+	protos "github.com/datadaodevs/evm-etl/protos/go/protos/chains"
 	"github.com/datadaodevs/evm-etl/shared/util"
 	framework "github.com/datadaodevs/go-service-framework/util"
 	"github.com/ethereum/go-ethereum/ethclient"
@@ -17,10 +17,10 @@ import (
 // Client is a generic node client interface
 type Client interface {
 	EthBlockNumber(ctx context.Context) (uint64, error)
-	EthGetBlockByNumber(ctx context.Context, blockNumber uint64) (*raw.Block, error)
-	DebugTraceBlock(ctx context.Context, blockNumber uint64) ([]*raw.CallTrace, error)
-	GetBlockReceipt(ctx context.Context, blockNumber uint64) ([]*raw.TransactionReceipt, error)
-	GetTransactionReceipt(ctx context.Context, txHash string) (*raw.TransactionReceipt, error)
+	EthGetBlockByNumber(ctx context.Context, blockNumber uint64) (*protos.Block, error)
+	DebugTraceBlock(ctx context.Context, blockNumber uint64) ([]*protos.CallTrace, error)
+	GetBlockReceipt(ctx context.Context, blockNumber uint64) ([]*protos.TransactionReceipt, error)
+	GetTransactionReceipt(ctx context.Context, txHash string) (*protos.TransactionReceipt, error)
 }
 
 // client is an ethclient-based implementation
@@ -108,7 +108,7 @@ func (c *client) EthBlockNumber(ctx context.Context) (uint64, error) {
 }
 
 // EthGetBlockByNumber gets a block by number
-func (c *client) EthGetBlockByNumber(ctx context.Context, blockNumber uint64) (*raw.Block, error) {
+func (c *client) EthGetBlockByNumber(ctx context.Context, blockNumber uint64) (*protos.Block, error) {
 	stringPayload := fmt.Sprintf("{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"eth_getBlockByNumber\",\"params\":[\"%s\", true]}", util.BlockNumberToHex(blockNumber))
 	var res jrpcBlockResult
 	if err := c.do(ctx, stringPayload, &res); err != nil {
@@ -117,7 +117,7 @@ func (c *client) EthGetBlockByNumber(ctx context.Context, blockNumber uint64) (*
 	if res.Error != nil {
 		return nil, fmt.Errorf("%v", res.Error)
 	}
-	data := &raw.Block{}
+	data := &protos.Block{}
 	if err := protojson.Unmarshal(res.Result, data); err != nil {
 		return nil, err
 	}
@@ -125,7 +125,7 @@ func (c *client) EthGetBlockByNumber(ctx context.Context, blockNumber uint64) (*
 	return data, nil
 }
 
-func (c *client) DebugTraceBlock(ctx context.Context, blockNumber uint64) ([]*raw.CallTrace, error) {
+func (c *client) DebugTraceBlock(ctx context.Context, blockNumber uint64) ([]*protos.CallTrace, error) {
 	// genesis block has no traces
 	if blockNumber == 0 {
 		return nil, nil
@@ -140,12 +140,12 @@ func (c *client) DebugTraceBlock(ctx context.Context, blockNumber uint64) ([]*ra
 		return nil, fmt.Errorf("%v", res.Error)
 	}
 
-	var rawTraces []*raw.CallTrace
+	var rawTraces []*protos.CallTrace
 	for _, trace := range res.Result {
 		if trace.Error != nil {
 			return nil, fmt.Errorf("%v", trace.Error)
 		}
-		rawTrace := &raw.CallTrace{}
+		rawTrace := &protos.CallTrace{}
 		if err := protojson.Unmarshal(trace.Result, rawTrace); err != nil {
 			return nil, err
 		}
@@ -155,7 +155,7 @@ func (c *client) DebugTraceBlock(ctx context.Context, blockNumber uint64) ([]*ra
 	return rawTraces, nil
 }
 
-func (c *client) GetBlockReceipt(ctx context.Context, blockNumber uint64) ([]*raw.TransactionReceipt, error) {
+func (c *client) GetBlockReceipt(ctx context.Context, blockNumber uint64) ([]*protos.TransactionReceipt, error) {
 	stringPayload := fmt.Sprintf("{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"eth_getBlockReceipts\",\"params\":[\"%s\"]}", util.BlockNumberToHex(blockNumber))
 
 	var res jrpcBlockReceiptsResult
@@ -166,9 +166,9 @@ func (c *client) GetBlockReceipt(ctx context.Context, blockNumber uint64) ([]*ra
 		return nil, fmt.Errorf("%v", res.Error)
 	}
 
-	var rawReceipts []*raw.TransactionReceipt
+	var rawReceipts []*protos.TransactionReceipt
 	for _, receipt := range res.Result {
-		rawReceipt := &raw.TransactionReceipt{}
+		rawReceipt := &protos.TransactionReceipt{}
 		if err := protojson.Unmarshal(receipt, rawReceipt); err != nil {
 			return nil, err
 		}
@@ -178,7 +178,7 @@ func (c *client) GetBlockReceipt(ctx context.Context, blockNumber uint64) ([]*ra
 	return rawReceipts, nil
 }
 
-func (c *client) GetTransactionReceipt(ctx context.Context, txHash string) (*raw.TransactionReceipt, error) {
+func (c *client) GetTransactionReceipt(ctx context.Context, txHash string) (*protos.TransactionReceipt, error) {
 	stringPayload := fmt.Sprintf("{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"eth_getTransactionReceipt\",\"params\":[\"%s\"]}", txHash)
 	var res jrpcTxReceiptResult
 	if err := c.do(ctx, stringPayload, &res); err != nil {
@@ -188,7 +188,7 @@ func (c *client) GetTransactionReceipt(ctx context.Context, txHash string) (*raw
 		return nil, fmt.Errorf("%v", res.Error)
 	}
 
-	rawReceipt := &raw.TransactionReceipt{}
+	rawReceipt := &protos.TransactionReceipt{}
 	if err := protojson.Unmarshal(res.Result, rawReceipt); err != nil {
 		return nil, err
 	}
