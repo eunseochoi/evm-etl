@@ -10,6 +10,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/xitongsys/parquet-go-source/gcs"
 	"github.com/xitongsys/parquet-go/parquet"
+	"github.com/xitongsys/parquet-go/reader"
 	"github.com/xitongsys/parquet-go/writer"
 )
 
@@ -108,14 +109,27 @@ func (g *GCSConnector) WriteMany(ctx context.Context, input []interface{}, mapTo
 
 func (g *GCSConnector) RetrieveBlock(ctx context.Context, blockHeight uint64) (*model.ParquetBlock, error) {
 	filename := fmt.Sprintf("blocks/%s/%d.parquet", util.RangeName(blockHeight, g.rangeSize), blockHeight)
-	obj := g.bucket.Object(filename)
-
-	r, err := obj.NewReader(ctx)
+	fr, err := gcs.NewGcsFileReader(ctx, g.projectID, g.bucketName, filename)
 	if err != nil {
 		return nil, err
 	}
-	defer r.Close()
+	defer fr.Close()
 
-	// @TODO - need to read parquet file and output
-	return &model.ParquetBlock{}, nil
+	pr, err := reader.NewParquetReader(fr, new(model.ParquetBlock), 4)
+	if err != nil {
+		return nil, err
+	}
+	defer pr.ReadStop()
+
+	//	We expect 1 row - make sure there is at least 1 and take the first 1
+	if pr.GetNumRows() == 0 {
+		return nil, errors.New("No rows in block parquet")
+	}
+
+	block := make([]model.ParquetBlock, 1)
+	if err = pr.Read(&block); err != nil {
+		return nil, err
+	}
+
+	return &block[0], nil
 }
