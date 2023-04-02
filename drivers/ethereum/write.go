@@ -84,8 +84,8 @@ func (e *EthereumDriver) parquetAndUploadTransactions(res interface{}) pool.Runn
 	}
 }
 
-// parquetAndUploadTraces writes parquet to storage for traces
-func (e *EthereumDriver) parquetAndUploadTraces(res interface{}) pool.Runner {
+// parquetAndUploadLogs writes parquet to storage for logs
+func (e *EthereumDriver) parquetAndUploadLogs(res interface{}) pool.Runner {
 	return func(ctx context.Context) (interface{}, error) {
 		block, blockNumber, err := unpackBlock(res)
 		if err != nil {
@@ -114,8 +114,8 @@ func (e *EthereumDriver) parquetAndUploadTraces(res interface{}) pool.Runner {
 	}
 }
 
-// parquetAndUploadLogs writes parquet to storage for logs
-func (e *EthereumDriver) parquetAndUploadLogs(res interface{}) pool.Runner {
+// parquetAndUploadTraces writes parquet to storage for traces
+func (e *EthereumDriver) parquetAndUploadTraces(res interface{}) pool.Runner {
 	return func(ctx context.Context) (interface{}, error) {
 		block, blockNumber, err := unpackBlock(res)
 		if err != nil {
