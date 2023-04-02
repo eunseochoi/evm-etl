@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	protos "github.com/datadaodevs/evm-etl/protos/go/protos/chains"
+	protos "github.com/datadaodevs/evm-etl/protos/go/protos/chains/ethereum"
 	"github.com/datadaodevs/evm-etl/shared/util"
 	framework "github.com/datadaodevs/go-service-framework/util"
 	"github.com/ethereum/go-ethereum/ethclient"
