@@ -15,6 +15,7 @@ import (
 
 const (
 	rangePrefix = "blocks_"
+	nullAddress = "0x0000000000000000000000000000000000000000"
 )
 
 // callTraceNode is a local utility struct for performing BFS-style traversal of trace tree
@@ -126,6 +127,12 @@ func (e *EthereumDriver) parquetAndUploadTraces(res interface{}) pool.Runner {
 			return nil, nil
 		}
 
+		//	Filter null=>null transactions and ensure transaction and trace counts match
+		filteredTx := filterNonTraceTransactions(block.Block.Transactions)
+		if len(filteredTx) != len(block.CallTraces) {
+			return nil, errors.Errorf("transactions and traces count don't match for block: %d %d != %d", blockNumber, len(filteredTx), len(block.CallTraces))
+		}
+
 		var bfsWG sync.WaitGroup
 		var outputs []interface{}
 		mutex := sync.Mutex{}
@@ -201,4 +208,14 @@ func unpackBlock(res interface{}) (*raw.Data, uint64, error) {
 	}
 
 	return obj, uint64(blockNumber), nil
+}
+
+func filterNonTraceTransactions(in []*raw.Transaction) []*raw.Transaction {
+	var filteredTransactions []*raw.Transaction
+	for _, tx := range in {
+		if tx.From != nullAddress || tx.To != nullAddress {
+			filteredTransactions = append(filteredTransactions, tx)
+		}
+	}
+	return filteredTransactions
 }
