@@ -2,6 +2,8 @@ module github.com/datadaodevs/evm-etl
 
 go 1.20
 
+replace github.com/datadaodevs/go-service-framework => /Users/robinarenson/src/coherent/go-service-framework
+
 require (
 	cloud.google.com/go/storage v1.27.0
 	github.com/bobg/gcsobj v0.1.2

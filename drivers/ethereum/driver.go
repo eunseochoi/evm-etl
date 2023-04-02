@@ -13,9 +13,8 @@ const (
 
 // Config stores configurable properties of the driver
 type Config struct {
-	GCPProjectID   string
-	BucketName     string
-	DirectoryRange int
+	MaxRetries     int `env:"HTTP_MAX_RETRIES" envDefault:"10"`
+	DirectoryRange int `env:"DIRECTORY_RANGE" envDefault:"10000"`
 }
 
 // EthereumDriver is the container for all ETL business logic
