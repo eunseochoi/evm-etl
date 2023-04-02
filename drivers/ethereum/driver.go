@@ -2,6 +2,7 @@ package ethereum
 
 import (
 	nodeClient "github.com/datadaodevs/evm-etl/client/node"
+	"github.com/datadaodevs/go-service-framework/constants"
 	"github.com/datadaodevs/go-service-framework/util"
 )
 
@@ -37,5 +38,5 @@ func New(cfg *Config, nodeClient nodeClient.Client, store Store, logger util.Log
 
 // Blockchain returns the name of the blockchain
 func (e *EthereumDriver) Blockchain() string {
-	return "ethereum"
+	return string(constants.Ethereum)
 }
