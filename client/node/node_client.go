@@ -5,7 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/datadaodevs/evm-etl/protos/go/protos/evm/raw"
-	"github.com/datadaodevs/go-service-framework/util"
+	"github.com/datadaodevs/evm-etl/shared/util"
+	framework "github.com/datadaodevs/go-service-framework/util"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"google.golang.org/protobuf/encoding/protojson"
 	"net/http"
@@ -69,7 +70,7 @@ type jrpcTxReceiptResult struct {
 }
 
 // NewClient instantiates a new client
-func NewClient(cfg *Config, logger util.Logger) (*client, error) {
+func NewClient(cfg *Config, logger framework.Logger) (*client, error) {
 	parsedClient, err := ethclient.Dial(cfg.NodeHost)
 	if err != nil {
 		logger.Fatal(err)
@@ -89,7 +90,7 @@ func NewClient(cfg *Config, logger util.Logger) (*client, error) {
 }
 
 // MustNewClient instantiates a new client, with fatal exit on error
-func MustNewClient(config *Config, logger util.Logger) *client {
+func MustNewClient(config *Config, logger framework.Logger) *client {
 	client, err := NewClient(config, logger)
 	if err != nil {
 		logger.Fatal("Failed to instantiate node client")
@@ -108,8 +109,7 @@ func (c *client) EthBlockNumber(ctx context.Context) (uint64, error) {
 
 // EthGetBlockByNumber gets a block by number
 func (c *client) EthGetBlockByNumber(ctx context.Context, blockNumber uint64) (*raw.Block, error) {
-	hexBlockNumber := "0x" + fmt.Sprintf("%x", blockNumber)
-	stringPayload := fmt.Sprintf("{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"eth_getBlockByNumber\",\"params\":[\"%s\", true]}", hexBlockNumber)
+	stringPayload := fmt.Sprintf("{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"eth_getBlockByNumber\",\"params\":[\"%s\", true]}", util.BlockNumberToHex(blockNumber))
 	var res jrpcBlockResult
 	if err := c.do(ctx, stringPayload, &res); err != nil {
 		return nil, err
@@ -131,8 +131,7 @@ func (c *client) DebugTraceBlock(ctx context.Context, blockNumber uint64) ([]*ra
 		return nil, nil
 	}
 
-	hexBlockNumber := "0x" + fmt.Sprintf("%x", blockNumber)
-	stringPayload := fmt.Sprintf("{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"debug_traceBlockByNumber\",\"params\":[\"%s\",{\"tracer\": \"callTracer\", \"timeout\":\"300s\"}]}", hexBlockNumber)
+	stringPayload := fmt.Sprintf("{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"debug_traceBlockByNumber\",\"params\":[\"%s\",{\"tracer\": \"callTracer\", \"timeout\":\"300s\"}]}", util.BlockNumberToHex(blockNumber))
 	var res jrpcTraceResult
 	if err := c.do(ctx, stringPayload, &res); err != nil {
 		return nil, err
@@ -157,8 +156,7 @@ func (c *client) DebugTraceBlock(ctx context.Context, blockNumber uint64) ([]*ra
 }
 
 func (c *client) GetBlockReceipt(ctx context.Context, blockNumber uint64) ([]*raw.TransactionReceipt, error) {
-	hexBlockNumber := "0x" + fmt.Sprintf("%x", blockNumber)
-	stringPayload := fmt.Sprintf("{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"eth_getBlockReceipts\",\"params\":[\"%s\"]}", hexBlockNumber)
+	stringPayload := fmt.Sprintf("{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"eth_getBlockReceipts\",\"params\":[\"%s\"]}", util.BlockNumberToHex(blockNumber))
 
 	var res jrpcBlockReceiptsResult
 	if err := c.do(ctx, stringPayload, &res); err != nil {

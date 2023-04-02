@@ -13,3 +13,7 @@ func RangeName(height uint64, directoryRange int) string {
 	top := bottom + rangeSize - 1
 	return fmt.Sprintf("%s%d-%d", rangePrefix, bottom, top)
 }
+
+func BlockNumberToHex(blockNumber uint64) string {
+	return "0x" + fmt.Sprintf("%x", blockNumber)
+}
