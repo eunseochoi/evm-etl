@@ -3,13 +3,11 @@ package ethereum
 import (
 	"context"
 	"fmt"
+	model "github.com/datadaodevs/evm-etl/model/ethereum"
 	"github.com/datadaodevs/evm-etl/protos/go/protos/evm/raw"
 	"github.com/datadaodevs/evm-etl/shared/util"
 	"github.com/datadaodevs/go-service-framework/pool"
 	"github.com/pkg/errors"
-	"github.com/xitongsys/parquet-go-source/gcs"
-	"github.com/xitongsys/parquet-go/parquet"
-	"github.com/xitongsys/parquet-go/writer"
 	"strconv"
 	"strings"
 	"sync"
@@ -45,7 +43,7 @@ func (e *EthereumDriver) parquetAndUploadBlock(res interface{}) pool.Runner {
 		}
 
 		filename := fmt.Sprintf("blocks/%s/%d.parquet", util.RangeName(blockNumber, e.config.DirectoryRange), blockNumber)
-		if err := e.write(ctx, ProtoBlockToParquet(block.Block), &ParquetBlock{}, filename); err != nil {
+		if err := e.store.WriteOne(ctx, ProtoBlockToParquet(block.Block), &model.ParquetBlock{}, filename); err != nil {
 			return nil, err
 		}
 
@@ -77,7 +75,7 @@ func (e *EthereumDriver) parquetAndUploadTransactions(res interface{}) pool.Runn
 
 		filename := fmt.Sprintf("transactions/%s/%d.parquet", util.RangeName(blockNumber, e.config.DirectoryRange), blockNumber)
 
-		if err := e.writeMany(ctx, outputs, &ParquetTransaction{}, filename); err != nil {
+		if err := e.store.WriteMany(ctx, outputs, &model.ParquetTransaction{}, filename); err != nil {
 			return nil, err
 		}
 		e.logger.Infof("successfully parqueted transactions for %d", blockNumber)
@@ -107,7 +105,7 @@ func (e *EthereumDriver) parquetAndUploadTraces(res interface{}) pool.Runner {
 
 		filename := fmt.Sprintf("logs/%s/%d.parquet", util.RangeName(blockNumber, e.config.DirectoryRange), blockNumber)
 
-		if err := e.writeMany(ctx, outputs, &ParquetLog{}, filename); err != nil {
+		if err := e.store.WriteMany(ctx, outputs, &model.ParquetLog{}, filename); err != nil {
 			return nil, err
 		}
 		e.logger.Infof("successfully parqueted traces for %d", blockNumber)
@@ -179,7 +177,7 @@ func (e *EthereumDriver) parquetAndUploadLogs(res interface{}) pool.Runner {
 		bfsWG.Wait()
 
 		filename := fmt.Sprintf("traces/%s/%d.parquet", util.RangeName(blockNumber, e.config.DirectoryRange), blockNumber)
-		if err := e.writeMany(ctx, outputs, &ParquetTrace{}, filename); err != nil {
+		if err := e.store.WriteMany(ctx, outputs, &model.ParquetTrace{}, filename); err != nil {
 			return nil, err
 		}
 
@@ -190,7 +188,7 @@ func (e *EthereumDriver) parquetAndUploadLogs(res interface{}) pool.Runner {
 }
 
 // unpackBlock pulls a block out of the generic response from the accumulator
-func unpackBlock(res interface{}) (*raw.Data, int64, error) {
+func unpackBlock(res interface{}) (*raw.Data, uint64, error) {
 	obj, ok := res.(*raw.Data)
 	if !ok {
 		return nil, 0, errors.New("Result is not correct type")
@@ -202,65 +200,5 @@ func unpackBlock(res interface{}) (*raw.Data, int64, error) {
 		return nil, 0, err
 	}
 
-	return obj, blockNumber, nil
-}
-
-// write writes a single parquet to GCS storage
-func (e *EthereumDriver) write(ctx context.Context, input interface{}, mapToStruct interface{}, filename string) error {
-	gw, err := gcs.NewGcsFileWriter(
-		ctx,
-		e.config.GCPProjectID,
-		e.config.BucketName,
-		filename,
-	)
-	if err != nil {
-		return errors.Errorf("cannot open file: %v", err)
-	}
-	defer gw.Close()
-
-	pw, err := writer.NewParquetWriter(gw, mapToStruct, 4)
-	if err != nil {
-		return errors.Errorf("cannot create parquet writer: %v", err)
-	}
-
-	pw.CompressionType = parquet.CompressionCodec_SNAPPY
-	if err = pw.Write(input); err != nil {
-		return errors.Errorf("write error: %v", err)
-	}
-
-	if err = pw.WriteStop(); err != nil {
-		return errors.Errorf("WriteStop error: %v", err)
-	}
-	return nil
-}
-
-// write writes a mutliple parquets to GCS storage
-func (e *EthereumDriver) writeMany(ctx context.Context, input []interface{}, mapToStruct interface{}, filename string) error {
-	gw, err := gcs.NewGcsFileWriter(
-		ctx,
-		e.config.GCPProjectID,
-		e.config.BucketName,
-		filename,
-	)
-	if err != nil {
-		return errors.Errorf("cannot open file: %v", err)
-	}
-	defer gw.Close()
-
-	pw, err := writer.NewParquetWriter(gw, mapToStruct, 4)
-	if err != nil {
-		return errors.Errorf("cannot create parquet writer: %v", err)
-	}
-
-	pw.CompressionType = parquet.CompressionCodec_SNAPPY
-	for _, row := range input {
-		if err = pw.Write(row); err != nil {
-			return errors.Errorf("write error: %v", err)
-		}
-	}
-
-	if err = pw.WriteStop(); err != nil {
-		return errors.Errorf("WriteStop error: %v", err)
-	}
-	return nil
+	return obj, uint64(blockNumber), nil
 }

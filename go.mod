@@ -3,6 +3,8 @@ module github.com/datadaodevs/evm-etl
 go 1.20
 
 require (
+	cloud.google.com/go/storage v1.27.0
+	github.com/bobg/gcsobj v0.1.2
 	github.com/caarlos0/env/v7 v7.1.0
 	github.com/datadaodevs/go-service-framework v0.0.0-20230328212639-377083d1c781
 	github.com/ethereum/go-ethereum v1.11.5
@@ -17,7 +19,6 @@ require (
 	cloud.google.com/go/compute v1.14.0 // indirect
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
 	cloud.google.com/go/iam v0.8.0 // indirect
-	cloud.google.com/go/storage v1.27.0 // indirect
 	github.com/DataDog/datadog-go/v5 v5.3.0 // indirect
 	github.com/Microsoft/go-winio v0.5.0 // indirect
 	github.com/StackExchange/wmi v0.0.0-20180116203802-5d049714c4a6 // indirect

@@ -17,7 +17,7 @@ func (e *EthereumDriver) FetchSequence(blockHeight uint64) map[string]pool.Runne
 
 // GetChainTipNumber gets the block number of the chaintip
 func (e *EthereumDriver) GetChainTipNumber(ctx context.Context) (uint64, error) {
-	blockNum, err := e.client.EthBlockNumber(ctx)
+	blockNum, err := e.nodeClient.EthBlockNumber(ctx)
 	if err != nil {
 		e.logger.Errorf("error thrown while trying to retrieve latest block number: %v", err)
 		return 0, err
@@ -28,7 +28,7 @@ func (e *EthereumDriver) GetChainTipNumber(ctx context.Context) (uint64, error) 
 
 // getBlockByNumber fetches a full block by number
 func (e *EthereumDriver) getBlockByNumber(ctx context.Context, blockHeight uint64) (*raw.Block, error) {
-	block, err := e.client.EthGetBlockByNumber(ctx, blockHeight)
+	block, err := e.nodeClient.EthGetBlockByNumber(ctx, blockHeight)
 	if err != nil {
 		e.logger.Errorf("error thrown while trying to retrieve block: %d, %v", blockHeight, err)
 		return nil, err
@@ -39,7 +39,7 @@ func (e *EthereumDriver) getBlockByNumber(ctx context.Context, blockHeight uint6
 
 // getBlockTraceByNumber fetches all traces for a given block
 func (e *EthereumDriver) getBlockTraceByNumber(ctx context.Context, blockHeight uint64) ([]*raw.CallTrace, error) {
-	traces, err := e.client.DebugTraceBlock(ctx, blockHeight)
+	traces, err := e.nodeClient.DebugTraceBlock(ctx, blockHeight)
 	if err != nil {
 		e.logger.Errorf("error thrown while trying to retrieve block trace: %d, %v", blockHeight, err)
 		return nil, err
@@ -50,7 +50,7 @@ func (e *EthereumDriver) getBlockTraceByNumber(ctx context.Context, blockHeight 
 
 // getBlockReceiptsByNumber fetches a set of block receipts for a given block
 func (e *EthereumDriver) getBlockReceiptsByNumber(ctx context.Context, blockHeight uint64) ([]*raw.TransactionReceipt, error) {
-	receipts, err := e.client.GetBlockReceipt(ctx, blockHeight)
+	receipts, err := e.nodeClient.GetBlockReceipt(ctx, blockHeight)
 	if err != nil {
 		e.logger.Errorf("error thrown while trying to retrieve block receipts: %d, %v", blockHeight, err)
 		return nil, err

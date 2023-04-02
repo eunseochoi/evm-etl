@@ -20,17 +20,19 @@ type Config struct {
 
 // EthereumDriver is the container for all ETL business logic
 type EthereumDriver struct {
-	client nodeClient.Client
-	logger util.Logger
-	config *Config
+	store      Store
+	nodeClient nodeClient.Client
+	logger     util.Logger
+	config     *Config
 }
 
 // New constructs a new EthereumDriver
-func New(cfg *Config, nodeClient nodeClient.Client, logger util.Logger) *EthereumDriver {
+func New(cfg *Config, nodeClient nodeClient.Client, store Store, logger util.Logger) *EthereumDriver {
 	return &EthereumDriver{
-		client: nodeClient,
-		logger: logger,
-		config: cfg,
+		nodeClient: nodeClient,
+		store:      store,
+		logger:     logger,
+		config:     cfg,
 	}
 }
 

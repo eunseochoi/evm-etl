@@ -11,7 +11,7 @@ func (e *EthereumDriver) IsValidBlock(ctx context.Context, index uint64) error {
 	if err != nil {
 		return err
 	}
-	previousBlock, err := e.getBlockByNumber(ctx, index-1)
+	previousBlock, err := e.store.RetrieveBlock(ctx, index-1)
 	if err != nil {
 		return err
 	}
