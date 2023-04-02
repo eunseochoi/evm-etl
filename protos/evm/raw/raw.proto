@@ -57,6 +57,7 @@ message Transaction {
   string max_fee_per_gas = 17; // hex string
   string max_priority_fee_per_gas = 18; // hex string
   string type = 19; // hex string
+}
 
 message TransactionReceipt {
   string transaction_hash = 1;
