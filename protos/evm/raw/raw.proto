@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package sh.coherent.blockchain.evm.raw;
+package sh.datadaodevs.blockchain.evm.raw;
 option go_package = "github.com/datadaodevs/evm-etl/protos/go/evm/raw";
 
 message Data {
@@ -58,17 +58,6 @@ message Transaction {
   string max_priority_fee_per_gas = 18; // hex string
   string type = 19; // hex string
 
-  // Optimism specific fields
-  string queue_origin = 20;
-  string tx_type = 21;
-  string l1_tx_origin = 22;
-  string l1_block_number = 23;
-  string l1_timestamp = 24;
-  string index = 25;
-  string queue_index = 26;
-  string raw_transaction = 27;
-}
-
 message TransactionReceipt {
   string transaction_hash = 1;
   string transaction_index = 2; // hex string
@@ -85,12 +74,6 @@ message TransactionReceipt {
   string type = 13; // hex string
   string root = 14;
   string status = 15; // hex string
-
-  // Optimism specific fields
-  string l1_fee = 16;
-  string l1_fee_scalar = 17;
-  string l1_gas_price = 18;
-  string l1_gas_used = 19;
 }
 
 message Log {
