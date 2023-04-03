@@ -21,16 +21,21 @@ type GCSConnector struct {
 	bucket     *storage.BucketHandle
 }
 
-func NewGCSConnector(ctx context.Context, bucketName string, projectID string) (*GCSConnector, error) {
+type GCSConfig struct {
+	BucketName string `env:"gcs_bucket_name,required"`
+	ProjectID  string `env:"gcp_project_id,required"`
+}
+
+func NewGCSConnector(ctx context.Context, cfg *GCSConfig) (*GCSConnector, error) {
 	client, err := storage.NewClient(ctx)
 	if err != nil {
 		return nil, err
 	}
 
 	return &GCSConnector{
-		bucketName: bucketName,
-		projectID:  projectID,
-		bucket:     client.Bucket(bucketName),
+		bucketName: cfg.BucketName,
+		projectID:  cfg.ProjectID,
+		bucket:     client.Bucket(cfg.BucketName),
 	}, nil
 }
 
