@@ -17,13 +17,14 @@ import (
 type GCSConnector struct {
 	bucketName string
 	projectID  string
-	rangeSize  int
+	rangeSize  uint64
 	bucket     *storage.BucketHandle
 }
 
 type GCSConfig struct {
 	BucketName string `env:"gcs_bucket_name,required"`
 	ProjectID  string `env:"gcp_project_id,required"`
+	RangeSize  uint64 `env:"gcs_dir_range_size" envDefault:"10000"`
 }
 
 func NewGCSConnector(ctx context.Context, cfg *GCSConfig) (*GCSConnector, error) {
@@ -36,20 +37,17 @@ func NewGCSConnector(ctx context.Context, cfg *GCSConfig) (*GCSConnector, error)
 		bucketName: cfg.BucketName,
 		projectID:  cfg.ProjectID,
 		bucket:     client.Bucket(cfg.BucketName),
+		rangeSize:  cfg.RangeSize,
 	}, nil
 }
 
-func MustNewGCSConnector(ctx context.Context, bucketName string, projectID string, logger framework.Logger) *GCSConnector {
-	client, err := storage.NewClient(ctx)
+func MustNewGCSConnector(ctx context.Context, cfg *GCSConfig, logger framework.Logger) *GCSConnector {
+	client, err := NewGCSConnector(ctx, cfg)
 	if err != nil {
 		logger.Fatalf("Could not instantiate GCS client: %v", err)
 	}
 
-	return &GCSConnector{
-		bucketName: bucketName,
-		projectID:  projectID,
-		bucket:     client.Bucket(bucketName),
-	}
+	return client
 }
 
 // Write writes a single parquet to GCS storage

@@ -7,6 +7,8 @@ import (
 
 // IsValidBlock checks the given block's parent hash against the hash of the previous block
 func (e *EthereumDriver) IsValidBlock(ctx context.Context, index uint64) error {
+	e.logger.Infof("Comparing block %d to block %d for validation", index, index-1)
+
 	currentBlock, err := e.getBlockByNumber(ctx, index)
 	if err != nil {
 		return err
