@@ -28,15 +28,9 @@ type GCSConfig struct {
 }
 
 func NewGCSConnector(ctx context.Context, cfg *GCSConfig) (*GCSConnector, error) {
-	client, err := storage.NewClient(ctx)
-	if err != nil {
-		return nil, err
-	}
-
 	return &GCSConnector{
 		bucketName: cfg.BucketName,
 		projectID:  cfg.ProjectID,
-		bucket:     client.Bucket(cfg.BucketName),
 		rangeSize:  cfg.RangeSize,
 	}, nil
 }
