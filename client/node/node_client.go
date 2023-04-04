@@ -11,7 +11,6 @@ import (
 	"google.golang.org/protobuf/encoding/protojson"
 	"net/http"
 	"strings"
-	"time"
 )
 
 // Client is a generic node client interface
@@ -78,7 +77,7 @@ func NewClient(cfg *Config, logger framework.Logger) (*client, error) {
 	}
 
 	httpClient := &http.Client{
-		Timeout: time.Second * 300,
+		Timeout: cfg.RPCTimeout,
 	}
 
 	return &client{
@@ -198,7 +197,6 @@ func (c *client) GetTransactionReceipt(ctx context.Context, txHash string) (*pro
 
 // do makes a generic HTTP request to the given node server
 func (c *client) do(ctx context.Context, strPayload string, respObj interface{}) error {
-	client := http.Client{}
 	reqPayload := strings.NewReader(strPayload)
 	req, err := http.NewRequest(http.MethodPost, c.url, reqPayload)
 	if err != nil {
@@ -210,7 +208,7 @@ func (c *client) do(ctx context.Context, strPayload string, respObj interface{})
 	ctx, cancel := context.WithTimeout(ctx, c.config.RPCTimeout)
 	defer cancel()
 	req = req.WithContext(ctx)
-	resp, err := client.Do(req)
+	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		return err
 	}

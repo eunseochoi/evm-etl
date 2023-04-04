@@ -4,9 +4,8 @@ go 1.20
 
 require (
 	cloud.google.com/go/storage v1.27.0
-	github.com/bobg/gcsobj v0.1.2
 	github.com/caarlos0/env/v7 v7.1.0
-	github.com/datadaodevs/go-service-framework v0.0.0-20230328212639-377083d1c781
+	github.com/datadaodevs/go-service-framework v0.0.0-20230402232711-3fb0811c85e9
 	github.com/ethereum/go-ethereum v1.11.5
 	github.com/pkg/errors v0.9.1
 	github.com/xitongsys/parquet-go v1.6.2
