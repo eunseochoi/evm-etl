@@ -46,6 +46,7 @@ func MustNewGCSConnector(ctx context.Context, cfg *GCSConfig, logger framework.L
 
 // Write writes a single parquet to GCS storage
 func (g *GCSConnector) WriteOne(ctx context.Context, input interface{}, mapToStruct interface{}, filename string) error {
+	var err error
 	gw, err := gcs.NewGcsFileWriter(
 		ctx,
 		g.projectID,
@@ -84,6 +85,7 @@ func (g *GCSConnector) WriteOne(ctx context.Context, input interface{}, mapToStr
 
 // Write writes a mutliple parquets to GCS storage
 func (g *GCSConnector) WriteMany(ctx context.Context, input []interface{}, mapToStruct interface{}, filename string) error {
+	var err error
 	gw, err := gcs.NewGcsFileWriter(
 		ctx,
 		g.projectID,
