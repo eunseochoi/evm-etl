@@ -9,10 +9,10 @@ import (
 
 // Config holds configurable properties for node client
 type Config struct {
-	Blockchain constants.Blockchain `env:"blockchain,required"`
-	NodeHost   string               `env:"node_host,required"`
-	RPCTimeout time.Duration        `env:"rpc_timeout" envDefault:"300s"`
-	RPCRetries int                  `env:"rpc_retries" envDefault:"2"`
+	Blockchain constants.Blockchain `env:"BLOCKCHAIN,required"`
+	NodeHost   string               `env:"NODE_HOST,required"`
+	RPCTimeout time.Duration        `env:"RPC_TIMEOUT" envDefault:"300s"`
+	RPCRetries int                  `env:"RPC_RETRIES" envDefault:"2"`
 }
 
 // ParseConfig parses config from env vars

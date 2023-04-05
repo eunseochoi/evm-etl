@@ -22,9 +22,9 @@ type GCSConnector struct {
 }
 
 type GCSConfig struct {
-	BucketName string `env:"gcs_bucket_name,required"`
-	ProjectID  string `env:"gcp_project_id,required"`
-	RangeSize  uint64 `env:"gcs_dir_range_size" envDefault:"10000"`
+	BucketName string `env:"GCS_BUCKET_NAME,required"`
+	ProjectID  string `env:"GCP_PROJECT_ID,required"`
+	RangeSize  uint64 `env:"GCS_DIR_RANGE_SIZE" envDefault:"10000"`
 }
 
 func NewGCSConnector(ctx context.Context, cfg *GCSConfig) (*GCSConnector, error) {
@@ -55,7 +55,16 @@ func (g *GCSConnector) WriteOne(ctx context.Context, input interface{}, mapToStr
 	if err != nil {
 		return errors.Errorf("cannot open file: %v", err)
 	}
-	defer gw.Close()
+	defer func() {
+		closeErr := gw.Close()
+		if closeErr != nil {
+			if err != nil {
+				err = errors.Wrapf(err, "GcsFileWriter Close error: %v", closeErr)
+			} else {
+				err = errors.Errorf("GcsFileWriter Close error: %v", closeErr)
+			}
+		}
+	}()
 
 	pw, err := writer.NewParquetWriter(gw, mapToStruct, 4)
 	if err != nil {
@@ -84,7 +93,16 @@ func (g *GCSConnector) WriteMany(ctx context.Context, input []interface{}, mapTo
 	if err != nil {
 		return errors.Errorf("cannot open file: %v", err)
 	}
-	defer gw.Close()
+	defer func() {
+		closeErr := gw.Close()
+		if closeErr != nil {
+			if err != nil {
+				err = errors.Wrapf(err, "GcsFileWriter Close error: %v", closeErr)
+			} else {
+				err = errors.Errorf("GcsFileWriter Close error: %v", closeErr)
+			}
+		}
+	}()
 
 	pw, err := writer.NewParquetWriter(gw, mapToStruct, 4)
 	if err != nil {
