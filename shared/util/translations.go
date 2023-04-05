@@ -3,7 +3,7 @@ package util
 import "fmt"
 
 const (
-	rangePrefix = "block"
+	rangePrefix = "blocks_"
 )
 
 // RangeName generates a well-formed name for a blocks directory, given a height and a range
