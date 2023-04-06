@@ -4,22 +4,19 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	protos "github.com/datadaodevs/evm-etl/protos/go/protos/chains/ethereum"
 	"github.com/datadaodevs/evm-etl/shared/util"
 	framework "github.com/datadaodevs/go-service-framework/util"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"google.golang.org/protobuf/encoding/protojson"
 	"net/http"
 	"strings"
 )
 
-// Client is a generic node client interface
 type Client interface {
-	EthBlockNumber(ctx context.Context) (uint64, error)
-	EthGetBlockByNumber(ctx context.Context, blockNumber uint64) (*protos.Block, error)
-	DebugTraceBlock(ctx context.Context, blockNumber uint64) ([]*protos.CallTrace, error)
-	GetBlockReceipt(ctx context.Context, blockNumber uint64) ([]*protos.TransactionReceipt, error)
-	GetTransactionReceipt(ctx context.Context, txHash string) (*protos.TransactionReceipt, error)
+	GetLatestBlockNumber(ctx context.Context) (uint64, error)
+	GetBlockByNumber(ctx context.Context, blockNumber uint64) (*BlockResponse, error)
+	GetTracesForBlock(ctx context.Context, blockNumber uint64) (*TraceResponse, error)
+	GetBlockReceipt(ctx context.Context, blockNumber uint64) (*BlockReceiptResponse, error)
+	GetTransactionReceipt(ctx context.Context, txHash string) (*TxReceiptResponse, error)
 }
 
 // client is an ethclient-based implementation
@@ -30,38 +27,38 @@ type client struct {
 	config       *Config
 }
 
-// jrpcBlockResult is a raw node client result for a block
-type jrpcBlockResult struct {
+// BlockResponse is a raw node client result for a block
+type BlockResponse struct {
 	Jsonrpc string          `json:"jsonrpc"`
 	Id      int             `json:"id"`
 	Result  json.RawMessage `json:"result"`
 	Error   interface{}     `json:"error"`
 }
 
-// jrpcTraceResult is a raw node client result for getting traces
-type jrpcTraceResult struct {
-	Jsonrpc string      `json:"jsonrpc"`
-	Id      int         `json:"id"`
-	Result  []Trace     `json:"result"`
-	Error   interface{} `json:"error"`
+// TraceResponse is a raw node client result for getting traces
+type TraceResponse struct {
+	Jsonrpc string        `json:"jsonrpc"`
+	Id      int           `json:"id"`
+	Result  []TraceResult `json:"result"`
+	Error   interface{}   `json:"error"`
 }
 
-// Trace is a single trace object
-type Trace struct {
+// TraceResult is a single trace object
+type TraceResult struct {
 	Result json.RawMessage `json:"result"`
 	Error  interface{}     `json:"error"`
 }
 
-// jrpcBlockReceiptsResult is a raw block receipts result from a node client
-type jrpcBlockReceiptsResult struct {
+// BlockReceiptResponse is a raw block receipts result from a node client
+type BlockReceiptResponse struct {
 	Jsonrpc string            `json:"jsonrpc"`
 	Id      int               `json:"id"`
 	Result  []json.RawMessage `json:"result"`
 	Error   interface{}       `json:"error"`
 }
 
-// jrpcTxReceiptResult is a raw tx receipts result from a node client
-type jrpcTxReceiptResult struct {
+// TxReceiptResponse is a raw tx receipts result from a node client
+type TxReceiptResponse struct {
 	Jsonrpc string          `json:"jsonrpc"`
 	Id      int             `json:"id"`
 	Result  json.RawMessage `json:"result"`
@@ -98,7 +95,7 @@ func MustNewClient(config *Config, logger framework.Logger) *client {
 }
 
 // EthBlockNumber gets the most recent block number
-func (c *client) EthBlockNumber(ctx context.Context) (uint64, error) {
+func (c *client) GetLatestBlockNumber(ctx context.Context) (uint64, error) {
 	number, err := c.parsedClient.BlockNumber(ctx)
 	if err != nil {
 		return 0, err
@@ -107,31 +104,27 @@ func (c *client) EthBlockNumber(ctx context.Context) (uint64, error) {
 }
 
 // EthGetBlockByNumber gets a block by number
-func (c *client) EthGetBlockByNumber(ctx context.Context, blockNumber uint64) (*protos.Block, error) {
+func (c *client) GetBlockByNumber(ctx context.Context, blockNumber uint64) (*BlockResponse, error) {
 	stringPayload := fmt.Sprintf("{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"eth_getBlockByNumber\",\"params\":[\"%s\", true]}", util.BlockNumberToHex(blockNumber))
-	var res jrpcBlockResult
+	var res BlockResponse
 	if err := c.do(ctx, stringPayload, &res); err != nil {
 		return nil, err
 	}
 	if res.Error != nil {
 		return nil, fmt.Errorf("%v", res.Error)
 	}
-	data := &protos.Block{}
-	if err := protojson.Unmarshal(res.Result, data); err != nil {
-		return nil, err
-	}
 
-	return data, nil
+	return &res, nil
 }
 
-func (c *client) DebugTraceBlock(ctx context.Context, blockNumber uint64) ([]*protos.CallTrace, error) {
+func (c *client) GetTracesForBlock(ctx context.Context, blockNumber uint64) (*TraceResponse, error) {
 	// genesis block has no traces
 	if blockNumber == 0 {
 		return nil, nil
 	}
 
 	stringPayload := fmt.Sprintf("{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"debug_traceBlockByNumber\",\"params\":[\"%s\",{\"tracer\": \"callTracer\", \"timeout\":\"300s\"}]}", util.BlockNumberToHex(blockNumber))
-	var res jrpcTraceResult
+	var res TraceResponse
 	if err := c.do(ctx, stringPayload, &res); err != nil {
 		return nil, err
 	}
@@ -139,25 +132,13 @@ func (c *client) DebugTraceBlock(ctx context.Context, blockNumber uint64) ([]*pr
 		return nil, fmt.Errorf("%v", res.Error)
 	}
 
-	var rawTraces []*protos.CallTrace
-	for _, trace := range res.Result {
-		if trace.Error != nil {
-			return nil, fmt.Errorf("%v", trace.Error)
-		}
-		rawTrace := &protos.CallTrace{}
-		if err := protojson.Unmarshal(trace.Result, rawTrace); err != nil {
-			return nil, err
-		}
-		rawTraces = append(rawTraces, rawTrace)
-	}
-
-	return rawTraces, nil
+	return &res, nil
 }
 
-func (c *client) GetBlockReceipt(ctx context.Context, blockNumber uint64) ([]*protos.TransactionReceipt, error) {
+func (c *client) GetBlockReceipt(ctx context.Context, blockNumber uint64) (*BlockReceiptResponse, error) {
 	stringPayload := fmt.Sprintf("{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"eth_getBlockReceipts\",\"params\":[\"%s\"]}", util.BlockNumberToHex(blockNumber))
 
-	var res jrpcBlockReceiptsResult
+	var res BlockReceiptResponse
 	if err := c.do(ctx, stringPayload, &res); err != nil {
 		return nil, err
 	}
@@ -165,21 +146,12 @@ func (c *client) GetBlockReceipt(ctx context.Context, blockNumber uint64) ([]*pr
 		return nil, fmt.Errorf("%v", res.Error)
 	}
 
-	var rawReceipts []*protos.TransactionReceipt
-	for _, receipt := range res.Result {
-		rawReceipt := &protos.TransactionReceipt{}
-		if err := protojson.Unmarshal(receipt, rawReceipt); err != nil {
-			return nil, err
-		}
-		rawReceipts = append(rawReceipts, rawReceipt)
-	}
-
-	return rawReceipts, nil
+	return &res, nil
 }
 
-func (c *client) GetTransactionReceipt(ctx context.Context, txHash string) (*protos.TransactionReceipt, error) {
+func (c *client) GetTransactionReceipt(ctx context.Context, txHash string) (*TxReceiptResponse, error) {
 	stringPayload := fmt.Sprintf("{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"eth_getTransactionReceipt\",\"params\":[\"%s\"]}", txHash)
-	var res jrpcTxReceiptResult
+	var res TxReceiptResponse
 	if err := c.do(ctx, stringPayload, &res); err != nil {
 		return nil, err
 	}
@@ -187,12 +159,7 @@ func (c *client) GetTransactionReceipt(ctx context.Context, txHash string) (*pro
 		return nil, fmt.Errorf("%v", res.Error)
 	}
 
-	rawReceipt := &protos.TransactionReceipt{}
-	if err := protojson.Unmarshal(res.Result, rawReceipt); err != nil {
-		return nil, err
-	}
-
-	return rawReceipt, nil
+	return &res, nil
 }
 
 // do makes a generic HTTP request to the given node server

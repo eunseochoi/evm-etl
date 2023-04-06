@@ -21,7 +21,7 @@ func (e *EthereumDriver) GetChainTipNumber(ctx context.Context) (uint64, error) 
 	var blockNum uint64
 	var err error
 	if err := retry.Exec(e.config.MaxRetries, func() error {
-		blockNum, err = e.nodeClient.EthBlockNumber(ctx)
+		blockNum, err = e.nodeClient.GetLatestBlockNumber(ctx)
 		if err != nil {
 			e.logger.Warnf("error thrown while trying to retrieve latest block number: %v", err)
 			return err
@@ -40,7 +40,7 @@ func (e *EthereumDriver) getBlockByNumber(ctx context.Context, blockHeight uint6
 	var block *protos.Block
 	var err error
 	if err := retry.Exec(e.config.MaxRetries, func() error {
-		block, err = e.nodeClient.EthGetBlockByNumber(ctx, blockHeight)
+		block, err = e.nodeClient.GetBlockByNumber(ctx, blockHeight)
 		if err != nil {
 			e.logger.Warnf("error thrown while trying to retrieve block: %d, %v", blockHeight, err)
 			return err
@@ -60,7 +60,7 @@ func (e *EthereumDriver) getBlockTraceByNumber(ctx context.Context, blockHeight 
 	var traces []*protos.CallTrace
 	var err error
 	if err := retry.Exec(e.config.MaxRetries, func() error {
-		traces, err = e.nodeClient.DebugTraceBlock(ctx, blockHeight)
+		traces, err = e.nodeClient.GetTracesForBlock(ctx, blockHeight)
 		if err != nil {
 			e.logger.Warnf("error thrown while trying to retrieve block trace: %d, %v", blockHeight, err)
 			return err

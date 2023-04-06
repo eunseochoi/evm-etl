@@ -16,7 +16,7 @@ const (
 // EthereumDriver is the container for all ETL business logic
 type EthereumDriver struct {
 	store      storage.Store
-	nodeClient nodeClient.Client
+	nodeClient *client
 	logger     util.Logger
 	config     *Config
 }
@@ -24,7 +24,7 @@ type EthereumDriver struct {
 // New constructs a new EthereumDriver
 func New(cfg *Config, nodeClient nodeClient.Client, store storage.Store, logger util.Logger) *EthereumDriver {
 	return &EthereumDriver{
-		nodeClient: nodeClient,
+		nodeClient: &client{innerClient: nodeClient},
 		store:      store,
 		logger:     logger,
 		config:     cfg,
