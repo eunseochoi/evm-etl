@@ -1,10 +1,10 @@
-package ethereum
+package optimism
 
 import (
 	"context"
 	"fmt"
-	model "github.com/datadaodevs/evm-etl/model/ethereum"
-	protos "github.com/datadaodevs/evm-etl/protos/go/protos/chains/ethereum"
+	model "github.com/datadaodevs/evm-etl/model/optimism"
+	protos "github.com/datadaodevs/evm-etl/protos/go/protos/chains/optimism"
 	"github.com/datadaodevs/evm-etl/shared/util"
 	"github.com/datadaodevs/go-service-framework/pool"
 	"github.com/pkg/errors"
@@ -26,35 +26,35 @@ type callTraceNode struct {
 }
 
 // Writers defines a set of parallelizable write steps for processing a block and its children
-func (e *EthereumDriver) Writers() []pool.FeedTransformer {
+func (d *OptimismDriver) Writers() []pool.FeedTransformer {
 	return []pool.FeedTransformer{
-		e.parquetAndUploadBlock,
-		e.parquetAndUploadTransactions,
-		e.parquetAndUploadTraces,
-		e.parquetAndUploadLogs,
+		d.parquetAndUploadBlock,
+		d.parquetAndUploadTransactions,
+		d.parquetAndUploadTraces,
+		d.parquetAndUploadLogs,
 	}
 }
 
 // parquetAndUploadBlock writes parquet to storage for a block
-func (e *EthereumDriver) parquetAndUploadBlock(res interface{}) pool.Runner {
+func (d *OptimismDriver) parquetAndUploadBlock(res interface{}) pool.Runner {
 	return func(ctx context.Context) (interface{}, error) {
 		block, blockNumber, err := unpackBlock(res)
 		if err != nil {
 			return nil, err
 		}
 
-		filename := fmt.Sprintf("blocks/%s/%d.parquet", util.RangeName(blockNumber, e.config.DirectoryRange), blockNumber)
-		if err := e.store.innerStore.WriteOne(ctx, ProtoBlockToParquet(block.Block), &model.ParquetBlock{}, filename); err != nil {
+		filename := fmt.Sprintf("blocks/%s/%d.parquet", util.RangeName(blockNumber, d.config.DirectoryRange), blockNumber)
+		if err := d.store.innerStore.WriteOne(ctx, ProtoBlockToParquet(block.Block), &model.ParquetBlock{}, filename); err != nil {
 			return nil, err
 		}
 
-		e.logger.Infof("successfully parqueted block for %d", blockNumber)
+		d.logger.Infof("successfully parqueted block for %d", blockNumber)
 		return nil, nil
 	}
 }
 
 // parquetAndUploadTransactions writes parquet to storage for transactions
-func (e *EthereumDriver) parquetAndUploadTransactions(res interface{}) pool.Runner {
+func (d *OptimismDriver) parquetAndUploadTransactions(res interface{}) pool.Runner {
 	return func(ctx context.Context) (interface{}, error) {
 		block, blockNumber, err := unpackBlock(res)
 		if err != nil {
@@ -74,19 +74,19 @@ func (e *EthereumDriver) parquetAndUploadTransactions(res interface{}) pool.Runn
 			outputs = append(outputs, parquetTransaction)
 		}
 
-		filename := fmt.Sprintf("transactions/%s/%d.parquet", util.RangeName(blockNumber, e.config.DirectoryRange), blockNumber)
+		filename := fmt.Sprintf("transactions/%s/%d.parquet", util.RangeName(blockNumber, d.config.DirectoryRange), blockNumber)
 
-		if err := e.store.innerStore.WriteMany(ctx, outputs, &model.ParquetTransaction{}, filename); err != nil {
+		if err := d.store.innerStore.WriteMany(ctx, outputs, &model.ParquetTransaction{}, filename); err != nil {
 			return nil, err
 		}
-		e.logger.Infof("successfully parqueted transactions for %d", blockNumber)
+		d.logger.Infof("successfully parqueted transactions for %d", blockNumber)
 
 		return nil, nil
 	}
 }
 
 // parquetAndUploadLogs writes parquet to storage for logs
-func (e *EthereumDriver) parquetAndUploadLogs(res interface{}) pool.Runner {
+func (d *OptimismDriver) parquetAndUploadLogs(res interface{}) pool.Runner {
 	return func(ctx context.Context) (interface{}, error) {
 		block, blockNumber, err := unpackBlock(res)
 		if err != nil {
@@ -104,19 +104,19 @@ func (e *EthereumDriver) parquetAndUploadLogs(res interface{}) pool.Runner {
 			}
 		}
 
-		filename := fmt.Sprintf("logs/%s/%d.parquet", util.RangeName(blockNumber, e.config.DirectoryRange), blockNumber)
+		filename := fmt.Sprintf("logs/%s/%d.parquet", util.RangeName(blockNumber, d.config.DirectoryRange), blockNumber)
 
-		if err := e.store.innerStore.WriteMany(ctx, outputs, &model.ParquetLog{}, filename); err != nil {
+		if err := d.store.innerStore.WriteMany(ctx, outputs, &model.ParquetLog{}, filename); err != nil {
 			return nil, err
 		}
-		e.logger.Infof("successfully parqueted traces for %d", blockNumber)
+		d.logger.Infof("successfully parqueted traces for %d", blockNumber)
 
 		return nil, nil
 	}
 }
 
 // parquetAndUploadTraces writes parquet to storage for traces
-func (e *EthereumDriver) parquetAndUploadTraces(res interface{}) pool.Runner {
+func (d *OptimismDriver) parquetAndUploadTraces(res interface{}) pool.Runner {
 	return func(ctx context.Context) (interface{}, error) {
 		block, blockNumber, err := unpackBlock(res)
 		if err != nil {
@@ -183,12 +183,12 @@ func (e *EthereumDriver) parquetAndUploadTraces(res interface{}) pool.Runner {
 		}
 		bfsWG.Wait()
 
-		filename := fmt.Sprintf("traces/%s/%d.parquet", util.RangeName(blockNumber, e.config.DirectoryRange), blockNumber)
-		if err := e.store.innerStore.WriteMany(ctx, outputs, &model.ParquetTrace{}, filename); err != nil {
+		filename := fmt.Sprintf("traces/%s/%d.parquet", util.RangeName(blockNumber, d.config.DirectoryRange), blockNumber)
+		if err := d.store.innerStore.WriteMany(ctx, outputs, &model.ParquetTrace{}, filename); err != nil {
 			return nil, err
 		}
 
-		e.logger.Infof("successfully parqueted logs for %d", blockNumber)
+		d.logger.Infof("successfully parqueted logs for %d", blockNumber)
 
 		return nil, nil
 	}

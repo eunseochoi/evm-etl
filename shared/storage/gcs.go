@@ -3,14 +3,10 @@ package storage
 import (
 	"cloud.google.com/go/storage"
 	"context"
-	"fmt"
-	model "github.com/datadaodevs/evm-etl/model/ethereum"
-	"github.com/datadaodevs/evm-etl/shared/util"
 	framework "github.com/datadaodevs/go-service-framework/util"
 	"github.com/pkg/errors"
 	"github.com/xitongsys/parquet-go-source/gcs"
 	"github.com/xitongsys/parquet-go/parquet"
-	"github.com/xitongsys/parquet-go/reader"
 	"github.com/xitongsys/parquet-go/writer"
 )
 
@@ -124,29 +120,14 @@ func (g *GCSConnector) WriteMany(ctx context.Context, input []interface{}, mapTo
 	return nil
 }
 
-func (g *GCSConnector) RetrieveBlock(ctx context.Context, blockHeight uint64) (*model.ParquetBlock, error) {
-	filename := fmt.Sprintf("blocks/%s/%d.parquet", util.RangeName(blockHeight, g.rangeSize), blockHeight)
-	fr, err := gcs.NewGcsFileReader(ctx, g.projectID, g.bucketName, filename)
-	if err != nil {
-		return nil, err
-	}
-	defer fr.Close()
+func (g *GCSConnector) ProjectID() string {
+	return g.projectID
+}
 
-	pr, err := reader.NewParquetReader(fr, new(model.ParquetBlock), 4)
-	if err != nil {
-		return nil, err
-	}
-	defer pr.ReadStop()
+func (g *GCSConnector) Bucket() string {
+	return g.bucketName
+}
 
-	//	We expect 1 row - make sure there is at least 1 and take the first 1
-	if pr.GetNumRows() == 0 {
-		return nil, errors.New("No rows in block parquet")
-	}
-
-	block := make([]model.ParquetBlock, 1)
-	if err = pr.Read(&block); err != nil {
-		return nil, err
-	}
-
-	return &block[0], nil
+func (g *GCSConnector) RangeSize() uint64 {
+	return g.rangeSize
 }

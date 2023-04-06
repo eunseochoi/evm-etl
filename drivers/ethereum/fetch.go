@@ -102,14 +102,14 @@ func (e *EthereumDriver) queueGetBlockTraceByNumber(blockHeight uint64) pool.Run
 	}
 }
 
-// queueGetBlockByNumber wraps GetBlockByNumber in a queueable Runner func
+// queueGetBlockByNumber wraps getBlockByNumber in a queueable Runner func
 func (e *EthereumDriver) queueGetBlockByNumber(blockHeight uint64) pool.Runner {
 	return func(ctx context.Context) (interface{}, error) {
 		return e.getBlockByNumber(ctx, blockHeight)
 	}
 }
 
-// queueGetBlockReceiptsByNumber wraps GetBlockReceiptsByNumber in a queueable Runner func
+// queueGetBlockReceiptsByNumber wraps getBlockReceiptsByNumber in a queueable Runner func
 func (e *EthereumDriver) queueGetBlockReceiptsByNumber(blockHeight uint64) pool.Runner {
 	return func(ctx context.Context) (interface{}, error) {
 		return e.getBlockReceiptsByNumber(ctx, blockHeight)
