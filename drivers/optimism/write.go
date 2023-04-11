@@ -14,7 +14,6 @@ import (
 )
 
 const (
-	rangePrefix = "blocks_"
 	nullAddress = "0x0000000000000000000000000000000000000000"
 )
 
