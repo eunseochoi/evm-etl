@@ -1,10 +1,10 @@
-package ethereum
+package polygon
 
 import (
 	"context"
 	"fmt"
 	"github.com/datadaodevs/evm-etl/client/node"
-	protos "github.com/datadaodevs/evm-etl/protos/go/protos/chains/ethereum"
+	protos "github.com/datadaodevs/evm-etl/protos/go/protos/chains/polygon"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
