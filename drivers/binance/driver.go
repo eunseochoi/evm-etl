@@ -33,6 +33,5 @@ func NewDriver(cfg *Config, nodeClient nodeClient.Client, innerStore storage.Sto
 
 // Blockchain returns the name of the blockchain
 func (d *Driver) Blockchain() string {
-	// TODO: add constant to servive framework
-	return string(constants.Ethereum)
+	return string(constants.Binance_Smart_Chain)
 }
