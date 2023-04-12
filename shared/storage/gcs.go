@@ -3,6 +3,7 @@ package storage
 import (
 	"cloud.google.com/go/storage"
 	"context"
+	"github.com/caarlos0/env/v7"
 	framework "github.com/datadaodevs/go-service-framework/util"
 	"github.com/pkg/errors"
 	"github.com/xitongsys/parquet-go-source/gcs"
@@ -21,6 +22,16 @@ type GCSConfig struct {
 	BucketName string `env:"GCS_BUCKET_NAME,required"`
 	ProjectID  string `env:"GCP_PROJECT_ID,required"`
 	RangeSize  uint64 `env:"GCS_DIR_RANGE_SIZE" envDefault:"10000"`
+}
+
+// MustParseConfig uses env.Parse to initialize config with environment variables
+func MustParseConfig(logger framework.Logger) *GCSConfig {
+	var cfg GCSConfig
+	if err := env.Parse(&cfg); err != nil {
+		logger.Fatalf("Could not parse gcs connector config: %v", err)
+	}
+
+	return &cfg
 }
 
 func NewGCSConnector(ctx context.Context, cfg *GCSConfig) (*GCSConnector, error) {
