@@ -32,6 +32,7 @@ func ProtoBlockToParquet(in *protos.Block) *model.ParquetBlock {
 		Timestamp:        in.Timestamp,
 		BaseFeePerGas:    in.BaseFeePerGas,
 		MixHash:          in.MixHash,
+		WithdrawalsRoot:  in.WithdrawalsRoot,
 	}
 
 	for _, uncle := range in.Uncles {
@@ -93,6 +94,18 @@ func ProtoLogToParquet(in *protos.Log) *model.ParquetLog {
 	}
 	for _, topic := range in.Topics {
 		out.Topics = append(out.Topics, topic)
+	}
+
+	return &out
+}
+
+// ProtoWithdrawalToParquet converts a withdrawal proto to parquet
+func ProtoWithdrawalToParquet(in *protos.Withdrawal) *model.ParquetWithdrawal {
+	out := model.ParquetWithdrawal{
+		Index:          in.Index,
+		ValidatorIndex: in.ValidatorIndex,
+		Address:        in.Address,
+		Amount:         in.Amount,
 	}
 
 	return &out

@@ -31,6 +31,7 @@ func (e *EthereumDriver) Writers() []pool.FeedTransformer {
 		e.parquetAndUploadTransactions,
 		e.parquetAndUploadTraces,
 		e.parquetAndUploadLogs,
+		e.parquetAndUploadWithdrawals,
 	}
 }
 
@@ -48,6 +49,34 @@ func (e *EthereumDriver) parquetAndUploadBlock(res interface{}) pool.Runner {
 		}
 
 		e.logger.Infof("successfully parqueted block for %d", blockNumber)
+		return nil, nil
+	}
+}
+
+// parquetAndUploadWithdrawals writes parquet to storage for withdrawals
+func (e *EthereumDriver) parquetAndUploadWithdrawals(res interface{}) pool.Runner {
+	return func(ctx context.Context) (interface{}, error) {
+		block, blockNumber, err := unpackBlock(res)
+		if err != nil {
+			return nil, err
+		}
+
+		if len(block.Block.Withdrawals) == 0 {
+			return nil, nil
+		}
+
+		var outputs []interface{}
+		for _, withdrawal := range block.Block.Withdrawals {
+			outputs = append(outputs, ProtoWithdrawalToParquet(withdrawal))
+		}
+
+		filename := fmt.Sprintf("withdrawals/%s/%d.parquet", util.RangeName(blockNumber, e.config.DirectoryRange), blockNumber)
+
+		if err := e.store.innerStore.WriteMany(ctx, outputs, &model.ParquetWithdrawal{}, filename); err != nil {
+			return nil, err
+		}
+		e.logger.Infof("successfully parqueted withdrawals for %d", blockNumber)
+
 		return nil, nil
 	}
 }
