@@ -67,7 +67,7 @@ message TransactionReceipt {
   string from = 5;
   string to = 6;
   string cumulative_gas_used = 7; // hex string
-  string effectiveGasPrice = 8; // hex string
+  string effective_gas_price = 8; // hex string
   string gas_used = 9; // hex string
   string contract_address = 10;
   repeated Log logs = 11;
@@ -101,7 +101,7 @@ message CallTrace {
   string output = 8;
   string time = 9;
   string error = 10;
-  string revertReason = 11;
+  string revert_reason = 11;
   repeated CallTrace calls = 12;
 }
 
