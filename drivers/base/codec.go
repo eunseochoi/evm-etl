@@ -12,6 +12,7 @@ import (
 func ProtoBlockToParquet(in *protos.Block) *model.ParquetBlock {
 	out := model.ParquetBlock{
 		Number:           in.Number,
+		BaseFeePerGas:    in.BaseFeePerGas,
 		Hash:             in.Hash,
 		ParentHash:       in.ParentHash,
 		Nonce:            in.Nonce,
