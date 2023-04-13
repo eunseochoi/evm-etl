@@ -67,7 +67,7 @@ func (e *EthereumDriver) parquetAndUploadWithdrawals(res interface{}) pool.Runne
 
 		var outputs []interface{}
 		for _, withdrawal := range block.Block.Withdrawals {
-			outputs = append(outputs, ProtoWithdrawalToParquet(withdrawal))
+			outputs = append(outputs, ProtoWithdrawalToParquet(withdrawal, block.Block.Number))
 		}
 
 		filename := fmt.Sprintf("withdrawals/%s/%d.parquet", util.RangeName(blockNumber, e.config.DirectoryRange), blockNumber)

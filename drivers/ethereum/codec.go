@@ -100,8 +100,9 @@ func ProtoLogToParquet(in *protos.Log) *model.ParquetLog {
 }
 
 // ProtoWithdrawalToParquet converts a withdrawal proto to parquet
-func ProtoWithdrawalToParquet(in *protos.Withdrawal) *model.ParquetWithdrawal {
+func ProtoWithdrawalToParquet(in *protos.Withdrawal, blockNumber string) *model.ParquetWithdrawal {
 	out := model.ParquetWithdrawal{
+		BlockNumber:    blockNumber,
 		Index:          in.Index,
 		ValidatorIndex: in.ValidatorIndex,
 		Address:        in.Address,

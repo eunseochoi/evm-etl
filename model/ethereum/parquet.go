@@ -87,6 +87,7 @@ type ParquetTrace struct {
 
 // ParquetWithdrawal represents a withdrawal in parquet form
 type ParquetWithdrawal struct {
+	BlockNumber    string `parquet:"name=block_number, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
 	Index          string `parquet:"name=index, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
 	ValidatorIndex string `parquet:"name=validator_index, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
 	Address        string `parquet:"name=address, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
