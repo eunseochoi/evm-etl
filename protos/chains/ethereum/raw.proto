@@ -33,6 +33,10 @@ message Block {
   // extra fields from alchemy and quicknode
   string base_fee_per_gas = 20; // hex string
   string mix_hash = 21;
+
+  // New Shanghai fields
+  string withdrawals_root = 22;
+  repeated Withdrawal withdrawals = 23;
 }
 
 message Transaction {
@@ -87,6 +91,13 @@ message Log {
   string address = 7;
   string data = 8;
   repeated string topics = 9;
+}
+
+message Withdrawal {
+  string index = 1;
+  string validator_index = 2;
+  string address = 3;
+  string amount = 4;
 }
 
 // quicknode structure

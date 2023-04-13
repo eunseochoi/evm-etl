@@ -22,6 +22,7 @@ type ParquetBlock struct {
 	Uncles           []string `parquet:"name=uncles, type=MAP, convertedtype=LIST, valuetype=BYTE_ARRAY, valueconvertedtype=UTF8"`
 	BaseFeePerGas    string   `parquet:"name=base_fee_per_gas, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
 	MixHash          string   `parquet:"name=mix_hash, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
+	WithdrawalsRoot  string   `parquet:"name=withdrawals_root, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
 }
 
 // ParquetTransaction represents a transaction in parquet form
@@ -82,4 +83,12 @@ type ParquetTrace struct {
 	Output          string `parquet:"name=output, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
 	Error           string `parquet:"name=error, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
 	RevertReason    string `parquet:"name=revert_reason, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
+}
+
+// ParquetWithdrawal represents a withdrawal in parquet form
+type ParquetWithdrawal struct {
+	Index          string `parquet:"name=index, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
+	ValidatorIndex string `parquet:"name=validator_index, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
+	Address        string `parquet:"name=address, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
+	Amount         string `parquet:"name=amount, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
 }
