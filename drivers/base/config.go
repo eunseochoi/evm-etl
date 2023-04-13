@@ -1,4 +1,4 @@
-package optimism
+package base
 
 import (
 	"github.com/caarlos0/env/v7"
@@ -15,7 +15,7 @@ type Config struct {
 func MustParseConfig(logger util.Logger) *Config {
 	var cfg Config
 	if err := env.Parse(&cfg); err != nil {
-		logger.Fatalf("Could not parse Optimism driver config: %v", err)
+		logger.Fatalf("could not parse Base driver config: %v", err)
 	}
 
 	return &cfg
