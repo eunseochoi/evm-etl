@@ -2,7 +2,7 @@ package polygon
 
 import (
 	"github.com/caarlos0/env/v7"
-	"github.com/datadaodevs/go-service-framework/util"
+	"github.com/coherentopensource/go-service-framework/util"
 )
 
 // Config stores configurable properties of the driver

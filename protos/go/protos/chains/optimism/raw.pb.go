@@ -1122,20 +1122,20 @@ func file_protos_chains_optimism_raw_proto_rawDescGZIP() []byte {
 
 var file_protos_chains_optimism_raw_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_protos_chains_optimism_raw_proto_goTypes = []interface{}{
-	(*Data)(nil),               // 0: sh.datadaodevs.blockchain.optimism.Data
-	(*Block)(nil),              // 1: sh.datadaodevs.blockchain.optimism.Block
-	(*Transaction)(nil),        // 2: sh.datadaodevs.blockchain.optimism.Transaction
-	(*TransactionReceipt)(nil), // 3: sh.datadaodevs.blockchain.optimism.TransactionReceipt
-	(*Log)(nil),                // 4: sh.datadaodevs.blockchain.optimism.Log
-	(*CallTrace)(nil),          // 5: sh.datadaodevs.blockchain.optimism.CallTrace
+	(*Data)(nil),               // 0: sh.coherentopensource.blockchain.optimism.Data
+	(*Block)(nil),              // 1: sh.coherentopensource.blockchain.optimism.Block
+	(*Transaction)(nil),        // 2: sh.coherentopensource.blockchain.optimism.Transaction
+	(*TransactionReceipt)(nil), // 3: sh.coherentopensource.blockchain.optimism.TransactionReceipt
+	(*Log)(nil),                // 4: sh.coherentopensource.blockchain.optimism.Log
+	(*CallTrace)(nil),          // 5: sh.coherentopensource.blockchain.optimism.CallTrace
 }
 var file_protos_chains_optimism_raw_proto_depIdxs = []int32{
-	1, // 0: sh.datadaodevs.blockchain.optimism.Data.block:type_name -> sh.datadaodevs.blockchain.optimism.Block
-	3, // 1: sh.datadaodevs.blockchain.optimism.Data.transaction_receipts:type_name -> sh.datadaodevs.blockchain.optimism.TransactionReceipt
-	5, // 2: sh.datadaodevs.blockchain.optimism.Data.call_traces:type_name -> sh.datadaodevs.blockchain.optimism.CallTrace
-	2, // 3: sh.datadaodevs.blockchain.optimism.Block.transactions:type_name -> sh.datadaodevs.blockchain.optimism.Transaction
-	4, // 4: sh.datadaodevs.blockchain.optimism.TransactionReceipt.logs:type_name -> sh.datadaodevs.blockchain.optimism.Log
-	5, // 5: sh.datadaodevs.blockchain.optimism.CallTrace.calls:type_name -> sh.datadaodevs.blockchain.optimism.CallTrace
+	1, // 0: sh.coherentopensource.blockchain.optimism.Data.block:type_name -> sh.coherentopensource.blockchain.optimism.Block
+	3, // 1: sh.coherentopensource.blockchain.optimism.Data.transaction_receipts:type_name -> sh.coherentopensource.blockchain.optimism.TransactionReceipt
+	5, // 2: sh.coherentopensource.blockchain.optimism.Data.call_traces:type_name -> sh.coherentopensource.blockchain.optimism.CallTrace
+	2, // 3: sh.coherentopensource.blockchain.optimism.Block.transactions:type_name -> sh.coherentopensource.blockchain.optimism.Transaction
+	4, // 4: sh.coherentopensource.blockchain.optimism.TransactionReceipt.logs:type_name -> sh.coherentopensource.blockchain.optimism.Log
+	5, // 5: sh.coherentopensource.blockchain.optimism.CallTrace.calls:type_name -> sh.coherentopensource.blockchain.optimism.CallTrace
 	6, // [6:6] is the sub-list for method output_type
 	6, // [6:6] is the sub-list for method input_type
 	6, // [6:6] is the sub-list for extension type_name

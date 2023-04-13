@@ -3,8 +3,8 @@ package ethereum
 import (
 	"context"
 	"errors"
-	protos "github.com/datadaodevs/evm-etl/protos/go/protos/chains/ethereum"
-	"github.com/datadaodevs/go-service-framework/pool"
+	protos "github.com/coherentopensource/evm-etl/protos/go/protos/chains/ethereum"
+	"github.com/coherentopensource/go-service-framework/pool"
 )
 
 // Accumulate combines a block, receipts, and traces from multiple protos into a single object, given a generic

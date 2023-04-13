@@ -1,10 +1,10 @@
 package base
 
 import (
-	nodeClient "github.com/datadaodevs/evm-etl/client/node"
-	"github.com/datadaodevs/evm-etl/shared/storage"
-	"github.com/datadaodevs/go-service-framework/constants"
-	"github.com/datadaodevs/go-service-framework/util"
+	nodeClient "github.com/coherentopensource/evm-etl/client/node"
+	"github.com/coherentopensource/evm-etl/shared/storage"
+	"github.com/coherentopensource/go-service-framework/constants"
+	"github.com/coherentopensource/go-service-framework/util"
 )
 
 const (

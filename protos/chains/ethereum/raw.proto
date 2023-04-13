@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-package sh.datadaodevs.blockchain.ethereum;
-option go_package = "github.com/datadaodevs/evm-etl/protos/go/chains/ethereum";
+package sh.coherentopensource.blockchain.ethereum;
+option go_package = "github.com/coherentopensource/evm-etl/protos/go/chains/ethereum";
 
 message Data {
   Block block = 1;

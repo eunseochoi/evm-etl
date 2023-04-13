@@ -1143,22 +1143,22 @@ func file_protos_chains_ethereum_raw_proto_rawDescGZIP() []byte {
 
 var file_protos_chains_ethereum_raw_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_protos_chains_ethereum_raw_proto_goTypes = []interface{}{
-	(*Data)(nil),               // 0: sh.datadaodevs.blockchain.ethereum.Data
-	(*Block)(nil),              // 1: sh.datadaodevs.blockchain.ethereum.Block
-	(*Transaction)(nil),        // 2: sh.datadaodevs.blockchain.ethereum.Transaction
-	(*TransactionReceipt)(nil), // 3: sh.datadaodevs.blockchain.ethereum.TransactionReceipt
-	(*Log)(nil),                // 4: sh.datadaodevs.blockchain.ethereum.Log
-	(*CallTrace)(nil),          // 5: sh.datadaodevs.blockchain.ethereum.CallTrace
-	(*Access)(nil),             // 6: sh.datadaodevs.blockchain.ethereum.Access
+	(*Data)(nil),               // 0: sh.coherentopensource.blockchain.ethereum.Data
+	(*Block)(nil),              // 1: sh.coherentopensource.blockchain.ethereum.Block
+	(*Transaction)(nil),        // 2: sh.coherentopensource.blockchain.ethereum.Transaction
+	(*TransactionReceipt)(nil), // 3: sh.coherentopensource.blockchain.ethereum.TransactionReceipt
+	(*Log)(nil),                // 4: sh.coherentopensource.blockchain.ethereum.Log
+	(*CallTrace)(nil),          // 5: sh.coherentopensource.blockchain.ethereum.CallTrace
+	(*Access)(nil),             // 6: sh.coherentopensource.blockchain.ethereum.Access
 }
 var file_protos_chains_ethereum_raw_proto_depIdxs = []int32{
-	1, // 0: sh.datadaodevs.blockchain.ethereum.Data.block:type_name -> sh.datadaodevs.blockchain.ethereum.Block
-	3, // 1: sh.datadaodevs.blockchain.ethereum.Data.transaction_receipts:type_name -> sh.datadaodevs.blockchain.ethereum.TransactionReceipt
-	5, // 2: sh.datadaodevs.blockchain.ethereum.Data.call_traces:type_name -> sh.datadaodevs.blockchain.ethereum.CallTrace
-	2, // 3: sh.datadaodevs.blockchain.ethereum.Block.transactions:type_name -> sh.datadaodevs.blockchain.ethereum.Transaction
-	6, // 4: sh.datadaodevs.blockchain.ethereum.Transaction.access_list:type_name -> sh.datadaodevs.blockchain.ethereum.Access
-	4, // 5: sh.datadaodevs.blockchain.ethereum.TransactionReceipt.logs:type_name -> sh.datadaodevs.blockchain.ethereum.Log
-	5, // 6: sh.datadaodevs.blockchain.ethereum.CallTrace.calls:type_name -> sh.datadaodevs.blockchain.ethereum.CallTrace
+	1, // 0: sh.coherentopensource.blockchain.ethereum.Data.block:type_name -> sh.coherentopensource.blockchain.ethereum.Block
+	3, // 1: sh.coherentopensource.blockchain.ethereum.Data.transaction_receipts:type_name -> sh.coherentopensource.blockchain.ethereum.TransactionReceipt
+	5, // 2: sh.coherentopensource.blockchain.ethereum.Data.call_traces:type_name -> sh.coherentopensource.blockchain.ethereum.CallTrace
+	2, // 3: sh.coherentopensource.blockchain.ethereum.Block.transactions:type_name -> sh.coherentopensource.blockchain.ethereum.Transaction
+	6, // 4: sh.coherentopensource.blockchain.ethereum.Transaction.access_list:type_name -> sh.coherentopensource.blockchain.ethereum.Access
+	4, // 5: sh.coherentopensource.blockchain.ethereum.TransactionReceipt.logs:type_name -> sh.coherentopensource.blockchain.ethereum.Log
+	5, // 6: sh.coherentopensource.blockchain.ethereum.CallTrace.calls:type_name -> sh.coherentopensource.blockchain.ethereum.CallTrace
 	7, // [7:7] is the sub-list for method output_type
 	7, // [7:7] is the sub-list for method input_type
 	7, // [7:7] is the sub-list for extension type_name

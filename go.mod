@@ -1,11 +1,11 @@
-module github.com/datadaodevs/evm-etl
+module github.com/coherentopensource/evm-etl
 
 go 1.20
 
 require (
 	cloud.google.com/go/storage v1.27.0
 	github.com/caarlos0/env/v7 v7.1.0
-	github.com/datadaodevs/go-service-framework v0.0.7
+	github.com/coherentopensource/go-service-framework v0.0.7
 	github.com/ethereum/go-ethereum v1.11.5
 	github.com/pkg/errors v0.9.1
 	github.com/xitongsys/parquet-go v1.6.2

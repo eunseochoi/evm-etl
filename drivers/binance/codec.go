@@ -5,8 +5,8 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	model "github.com/datadaodevs/evm-etl/model/binance"
-	protos "github.com/datadaodevs/evm-etl/protos/go/protos/chains/binance"
+	model "github.com/coherentopensource/evm-etl/model/binance"
+	protos "github.com/coherentopensource/evm-etl/protos/go/protos/chains/binance"
 	"github.com/pkg/errors"
 )
 

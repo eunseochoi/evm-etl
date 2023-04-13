@@ -3,8 +3,8 @@ package polygon
 import (
 	"context"
 	"fmt"
-	"github.com/datadaodevs/evm-etl/client/node"
-	protos "github.com/datadaodevs/evm-etl/protos/go/protos/chains/polygon"
+	"github.com/coherentopensource/evm-etl/client/node"
+	protos "github.com/coherentopensource/evm-etl/protos/go/protos/chains/polygon"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 

@@ -3,9 +3,9 @@ package optimism
 import (
 	"context"
 	"fmt"
-	"github.com/datadaodevs/evm-etl/client/node"
-	protos "github.com/datadaodevs/evm-etl/protos/go/protos/chains/optimism"
-	"github.com/datadaodevs/go-service-framework/util"
+	"github.com/coherentopensource/evm-etl/client/node"
+	protos "github.com/coherentopensource/evm-etl/protos/go/protos/chains/optimism"
+	"github.com/coherentopensource/go-service-framework/util"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 

@@ -2,8 +2,8 @@ package node
 
 import (
 	"github.com/caarlos0/env/v7"
-	"github.com/datadaodevs/go-service-framework/constants"
-	"github.com/datadaodevs/go-service-framework/util"
+	"github.com/coherentopensource/go-service-framework/constants"
+	"github.com/coherentopensource/go-service-framework/util"
 	"time"
 )
 

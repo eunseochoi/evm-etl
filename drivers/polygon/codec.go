@@ -5,8 +5,8 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	model "github.com/datadaodevs/evm-etl/model/polygon"
-	protos "github.com/datadaodevs/evm-etl/protos/go/protos/chains/polygon"
+	model "github.com/coherentopensource/evm-etl/model/polygon"
+	protos "github.com/coherentopensource/evm-etl/protos/go/protos/chains/polygon"
 	"github.com/pkg/errors"
 )
 

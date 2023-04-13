@@ -1143,22 +1143,22 @@ func file_protos_chains_polygon_raw_proto_rawDescGZIP() []byte {
 
 var file_protos_chains_polygon_raw_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_protos_chains_polygon_raw_proto_goTypes = []interface{}{
-	(*Data)(nil),               // 0: sh.datadaodevs.blockchain.polygon.Data
-	(*Block)(nil),              // 1: sh.datadaodevs.blockchain.polygon.Block
-	(*Transaction)(nil),        // 2: sh.datadaodevs.blockchain.polygon.Transaction
-	(*TransactionReceipt)(nil), // 3: sh.datadaodevs.blockchain.polygon.TransactionReceipt
-	(*Log)(nil),                // 4: sh.datadaodevs.blockchain.polygon.Log
-	(*CallTrace)(nil),          // 5: sh.datadaodevs.blockchain.polygon.CallTrace
-	(*Access)(nil),             // 6: sh.datadaodevs.blockchain.polygon.Access
+	(*Data)(nil),               // 0: sh.coherentopensource.blockchain.polygon.Data
+	(*Block)(nil),              // 1: sh.coherentopensource.blockchain.polygon.Block
+	(*Transaction)(nil),        // 2: sh.coherentopensource.blockchain.polygon.Transaction
+	(*TransactionReceipt)(nil), // 3: sh.coherentopensource.blockchain.polygon.TransactionReceipt
+	(*Log)(nil),                // 4: sh.coherentopensource.blockchain.polygon.Log
+	(*CallTrace)(nil),          // 5: sh.coherentopensource.blockchain.polygon.CallTrace
+	(*Access)(nil),             // 6: sh.coherentopensource.blockchain.polygon.Access
 }
 var file_protos_chains_polygon_raw_proto_depIdxs = []int32{
-	1, // 0: sh.datadaodevs.blockchain.polygon.Data.block:type_name -> sh.datadaodevs.blockchain.polygon.Block
-	3, // 1: sh.datadaodevs.blockchain.polygon.Data.transaction_receipts:type_name -> sh.datadaodevs.blockchain.polygon.TransactionReceipt
-	5, // 2: sh.datadaodevs.blockchain.polygon.Data.call_traces:type_name -> sh.datadaodevs.blockchain.polygon.CallTrace
-	2, // 3: sh.datadaodevs.blockchain.polygon.Block.transactions:type_name -> sh.datadaodevs.blockchain.polygon.Transaction
-	6, // 4: sh.datadaodevs.blockchain.polygon.Transaction.access_list:type_name -> sh.datadaodevs.blockchain.polygon.Access
-	4, // 5: sh.datadaodevs.blockchain.polygon.TransactionReceipt.logs:type_name -> sh.datadaodevs.blockchain.polygon.Log
-	5, // 6: sh.datadaodevs.blockchain.polygon.CallTrace.calls:type_name -> sh.datadaodevs.blockchain.polygon.CallTrace
+	1, // 0: sh.coherentopensource.blockchain.polygon.Data.block:type_name -> sh.coherentopensource.blockchain.polygon.Block
+	3, // 1: sh.coherentopensource.blockchain.polygon.Data.transaction_receipts:type_name -> sh.coherentopensource.blockchain.polygon.TransactionReceipt
+	5, // 2: sh.coherentopensource.blockchain.polygon.Data.call_traces:type_name -> sh.coherentopensource.blockchain.polygon.CallTrace
+	2, // 3: sh.coherentopensource.blockchain.polygon.Block.transactions:type_name -> sh.coherentopensource.blockchain.polygon.Transaction
+	6, // 4: sh.coherentopensource.blockchain.polygon.Transaction.access_list:type_name -> sh.coherentopensource.blockchain.polygon.Access
+	4, // 5: sh.coherentopensource.blockchain.polygon.TransactionReceipt.logs:type_name -> sh.coherentopensource.blockchain.polygon.Log
+	5, // 6: sh.coherentopensource.blockchain.polygon.CallTrace.calls:type_name -> sh.coherentopensource.blockchain.polygon.CallTrace
 	7, // [7:7] is the sub-list for method output_type
 	7, // [7:7] is the sub-list for method input_type
 	7, // [7:7] is the sub-list for extension type_name

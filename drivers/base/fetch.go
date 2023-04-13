@@ -3,9 +3,9 @@ package base
 import (
 	"context"
 	"fmt"
-	protos "github.com/datadaodevs/evm-etl/protos/go/protos/chains/base"
-	"github.com/datadaodevs/go-service-framework/pool"
-	"github.com/datadaodevs/go-service-framework/retry"
+	protos "github.com/coherentopensource/evm-etl/protos/go/protos/chains/base"
+	"github.com/coherentopensource/go-service-framework/pool"
+	"github.com/coherentopensource/go-service-framework/retry"
 )
 
 type blockAndReceiptWrapper struct {

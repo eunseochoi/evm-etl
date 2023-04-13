@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	model "github.com/datadaodevs/evm-etl/model/polygon"
-	"github.com/datadaodevs/evm-etl/shared/storage"
-	"github.com/datadaodevs/evm-etl/shared/util"
+	model "github.com/coherentopensource/evm-etl/model/polygon"
+	"github.com/coherentopensource/evm-etl/shared/storage"
+	"github.com/coherentopensource/evm-etl/shared/util"
 	"github.com/xitongsys/parquet-go-source/gcs"
 	"github.com/xitongsys/parquet-go/reader"
 )

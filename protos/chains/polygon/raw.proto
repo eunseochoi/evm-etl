@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-package sh.datadaodevs.blockchain.polygon;
-option go_package = "github.com/datadaodevs/evm-etl/protos/go/chains/polygon";
+package sh.coherentopensource.blockchain.polygon;
+option go_package = "github.com/coherentopensource/evm-etl/protos/go/chains/polygon";
 
 message Data {
   Block block = 1;

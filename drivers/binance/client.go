@@ -3,8 +3,8 @@ package binance
 import (
 	"context"
 	"fmt"
-	"github.com/datadaodevs/evm-etl/client/node"
-	protos "github.com/datadaodevs/evm-etl/protos/go/protos/chains/binance"
+	"github.com/coherentopensource/evm-etl/client/node"
+	protos "github.com/coherentopensource/evm-etl/protos/go/protos/chains/binance"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 

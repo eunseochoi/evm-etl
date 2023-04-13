@@ -1143,22 +1143,22 @@ func file_protos_chains_binance_raw_proto_rawDescGZIP() []byte {
 
 var file_protos_chains_binance_raw_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_protos_chains_binance_raw_proto_goTypes = []interface{}{
-	(*Data)(nil),               // 0: sh.datadaodevs.blockchain.binance.Data
-	(*Block)(nil),              // 1: sh.datadaodevs.blockchain.binance.Block
-	(*Transaction)(nil),        // 2: sh.datadaodevs.blockchain.binance.Transaction
-	(*TransactionReceipt)(nil), // 3: sh.datadaodevs.blockchain.binance.TransactionReceipt
-	(*Log)(nil),                // 4: sh.datadaodevs.blockchain.binance.Log
-	(*CallTrace)(nil),          // 5: sh.datadaodevs.blockchain.binance.CallTrace
-	(*Access)(nil),             // 6: sh.datadaodevs.blockchain.binance.Access
+	(*Data)(nil),               // 0: sh.coherentopensource.blockchain.binance.Data
+	(*Block)(nil),              // 1: sh.coherentopensource.blockchain.binance.Block
+	(*Transaction)(nil),        // 2: sh.coherentopensource.blockchain.binance.Transaction
+	(*TransactionReceipt)(nil), // 3: sh.coherentopensource.blockchain.binance.TransactionReceipt
+	(*Log)(nil),                // 4: sh.coherentopensource.blockchain.binance.Log
+	(*CallTrace)(nil),          // 5: sh.coherentopensource.blockchain.binance.CallTrace
+	(*Access)(nil),             // 6: sh.coherentopensource.blockchain.binance.Access
 }
 var file_protos_chains_binance_raw_proto_depIdxs = []int32{
-	1, // 0: sh.datadaodevs.blockchain.binance.Data.block:type_name -> sh.datadaodevs.blockchain.binance.Block
-	3, // 1: sh.datadaodevs.blockchain.binance.Data.transaction_receipts:type_name -> sh.datadaodevs.blockchain.binance.TransactionReceipt
-	5, // 2: sh.datadaodevs.blockchain.binance.Data.call_traces:type_name -> sh.datadaodevs.blockchain.binance.CallTrace
-	2, // 3: sh.datadaodevs.blockchain.binance.Block.transactions:type_name -> sh.datadaodevs.blockchain.binance.Transaction
-	6, // 4: sh.datadaodevs.blockchain.binance.Transaction.access_list:type_name -> sh.datadaodevs.blockchain.binance.Access
-	4, // 5: sh.datadaodevs.blockchain.binance.TransactionReceipt.logs:type_name -> sh.datadaodevs.blockchain.binance.Log
-	5, // 6: sh.datadaodevs.blockchain.binance.CallTrace.calls:type_name -> sh.datadaodevs.blockchain.binance.CallTrace
+	1, // 0: sh.coherentopensource.blockchain.binance.Data.block:type_name -> sh.coherentopensource.blockchain.binance.Block
+	3, // 1: sh.coherentopensource.blockchain.binance.Data.transaction_receipts:type_name -> sh.coherentopensource.blockchain.binance.TransactionReceipt
+	5, // 2: sh.coherentopensource.blockchain.binance.Data.call_traces:type_name -> sh.coherentopensource.blockchain.binance.CallTrace
+	2, // 3: sh.coherentopensource.blockchain.binance.Block.transactions:type_name -> sh.coherentopensource.blockchain.binance.Transaction
+	6, // 4: sh.coherentopensource.blockchain.binance.Transaction.access_list:type_name -> sh.coherentopensource.blockchain.binance.Access
+	4, // 5: sh.coherentopensource.blockchain.binance.TransactionReceipt.logs:type_name -> sh.coherentopensource.blockchain.binance.Log
+	5, // 6: sh.coherentopensource.blockchain.binance.CallTrace.calls:type_name -> sh.coherentopensource.blockchain.binance.CallTrace
 	7, // [7:7] is the sub-list for method output_type
 	7, // [7:7] is the sub-list for method input_type
 	7, // [7:7] is the sub-list for extension type_name
