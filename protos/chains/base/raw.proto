@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-package sh.datadaodevs.blockchain.ethereum;
-option go_package = "github.com/datadaodevs/evm-etl/protos/go/chains/ethereum";
+package sh.datadaodevs.blockchain.base;
+option go_package = "github.com/datadaodevs/evm-etl/protos/go/chains/base";
 
 message Data {
   Block block = 1;
@@ -11,27 +11,27 @@ message Data {
 
 message Block {
   string number = 1; // hex string
-  string hash = 2;
-  string parent_hash = 3;
-  string nonce = 4;
-  string sha3_uncles = 5;
-  string logs_bloom = 6;
-  string transactions_root = 7;
-  string state_root = 8;
-  string receipts_root = 9;
-  string miner = 10;
-  string difficulty = 11; // hex string
-  string total_difficulty = 12; // hex string
-  string extra_data = 13;
-  string size = 14; // hex string
-  string gas_limit = 15; // hex string
-  string gas_used = 16; // hex string
-  string timestamp = 17; // hex string
-  repeated Transaction transactions = 18;
-  repeated string uncles = 19;
+  string base_fee_per_gas = 2;
+  string hash = 3;
+  string parent_hash = 4;
+  string nonce = 5;
+  string sha3_uncles = 6;
+  string logs_bloom = 7;
+  string transactions_root = 8;
+  string state_root = 9;
+  string receipts_root = 10;
+  string miner = 11;
+  string difficulty = 12; // hex string
+  string total_difficulty = 13; // hex string
+  string extra_data = 14;
+  string size = 15; // hex string
+  string gas_limit = 16; // hex string
+  string gas_used = 17; // hex string
+  string timestamp = 18; // hex string
+  repeated Transaction transactions = 19;
+  repeated string uncles = 20;
 
   // extra fields from alchemy and quicknode
-  string base_fee_per_gas = 20; // hex string
   string mix_hash = 21;
 }
 
@@ -47,16 +47,13 @@ message Transaction {
   string to = 9;
   string transaction_index = 10; // hex string
   string value = 11; // hex string
-  string v = 12;
-  string r = 13;
-  string s = 14;
-
-  // extra fields from alchemy and quicknode
-  repeated Access access_list = 15;
-  string chain_id = 16; // hex string
-  string max_fee_per_gas = 17; // hex string
-  string max_priority_fee_per_gas = 18; // hex string
-  string type = 19; // hex string
+  string type = 12;
+  string v = 13;
+  string r = 14;
+  string s = 15;
+  string source_hash = 16;
+  string mint = 17;
+  bool is_system_tx = 18;
 }
 
 message TransactionReceipt {
@@ -72,9 +69,12 @@ message TransactionReceipt {
   string contract_address = 10;
   repeated Log logs = 11;
   string logs_bloom = 12;
-  string type = 13; // hex string
-  string root = 14;
-  string status = 15; // hex string
+  string status = 13; // hex string
+  string l1_fee = 14;
+  string l1_fee_scalar = 15;
+  string l1_gas_price = 16;
+  string l1_gas_used = 17;
+  string type = 18;
 }
 
 message Log {
@@ -99,13 +99,7 @@ message CallTrace {
   string gas_used = 6; // hex string
   string input = 7;
   string output = 8;
-  string time = 9;
-  string error = 10;
-  string revert_reason = 11;
-  repeated CallTrace calls = 12;
-}
-
-message Access {
-  string address = 1;
-  repeated string storage_keys = 2;
+  string error = 9;
+  string revert_reason = 10;
+  repeated CallTrace calls = 11;
 }
