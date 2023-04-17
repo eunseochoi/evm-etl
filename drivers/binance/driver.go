@@ -1,7 +1,7 @@
 package binance
 
 import (
-	nodeClient "github.com/coherentopensource/evm-etl/client/node"
+	nodeClient "github.com/coherentopensource/chain-interactor/client/node"
 	"github.com/coherentopensource/evm-etl/shared/storage"
 	"github.com/coherentopensource/go-service-framework/constants"
 	"github.com/coherentopensource/go-service-framework/util"
