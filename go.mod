@@ -5,8 +5,8 @@ go 1.20
 require (
 	cloud.google.com/go/storage v1.27.0
 	github.com/caarlos0/env/v7 v7.1.0
-	github.com/coherentopensource/go-service-framework v0.0.8
 	github.com/coherentopensource/chain-interactor v0.0.3
+	github.com/coherentopensource/go-service-framework v0.0.12
 	github.com/pkg/errors v0.9.1
 	github.com/xitongsys/parquet-go v1.6.2
 	github.com/xitongsys/parquet-go-source v0.0.0-20230312005205-fbbcdea5f512
@@ -26,6 +26,7 @@ require (
 	github.com/btcsuite/btcd/btcec/v2 v2.2.0 // indirect
 	github.com/deckarep/golang-set/v2 v2.1.0 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.0.1 // indirect
+	github.com/ethereum/go-ethereum v1.11.5 // indirect
 	github.com/go-ole/go-ole v1.2.1 // indirect
 	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
