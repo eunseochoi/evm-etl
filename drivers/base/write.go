@@ -65,12 +65,19 @@ func (d *Driver) parquetAndUploadTransactions(res interface{}) pool.Runner {
 		}
 
 		var outputs []interface{}
+
+		if len(block.TransactionReceipts) != len(block.TransactionReceipts) {
+			d.logger.Warnf("block %d has %d transactions but %d receipts", blockNumber, len(block.Block.Transactions), len(block.TransactionReceipts))
+		}
+
 		for i, tx := range block.Block.Transactions {
-			parquetTransaction, err := ProtoTransactionToParquet(tx, block.TransactionReceipts[i])
-			if err != nil {
-				return nil, err
+			if i < len(block.TransactionReceipts) {
+				parquetTransaction, err := ProtoTransactionToParquet(tx, block.TransactionReceipts[i])
+				if err != nil {
+					return nil, err
+				}
+				outputs = append(outputs, parquetTransaction)
 			}
-			outputs = append(outputs, parquetTransaction)
 		}
 
 		filename := fmt.Sprintf("transactions/%s/%d.parquet", util.RangeName(blockNumber, d.config.DirectoryRange), blockNumber)
