@@ -22,6 +22,7 @@ type ParquetBlock struct {
 	Uncles           []string `parquet:"name=uncles, type=MAP, convertedtype=LIST, valuetype=BYTE_ARRAY, valueconvertedtype=UTF8"`
 	BaseFeePerGas    string   `parquet:"name=base_fee_per_gas, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
 	MixHash          string   `parquet:"name=mix_hash, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
+	MaxFeePerGas     string   `parquet:"name=max_fee_per_gas, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
 }
 
 // ParquetTransaction represents a transaction in parquet form
