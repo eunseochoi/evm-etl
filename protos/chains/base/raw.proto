@@ -33,6 +33,7 @@ message Block {
 
   // extra fields from alchemy and quicknode
   string mix_hash = 21;
+  string max_fee_per_gas = 22;
 }
 
 message Transaction {
