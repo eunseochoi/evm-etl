@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/coherentopensource/chain-interactor/client/node"
-	protos "github.com/coherentopensource/evm-etl/protos/go/protos/chains/binance"
+	protos "github.com/coherentopensource/chain-interactor/protos/go/protos/chains/binance"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 

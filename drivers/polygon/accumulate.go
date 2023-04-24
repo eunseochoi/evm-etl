@@ -3,7 +3,7 @@ package polygon
 import (
 	"context"
 	"errors"
-	protos "github.com/coherentopensource/evm-etl/protos/go/protos/chains/polygon"
+	protos "github.com/coherentopensource/chain-interactor/protos/go/protos/chains/polygon"
 	"github.com/coherentopensource/go-service-framework/pool"
 )
 

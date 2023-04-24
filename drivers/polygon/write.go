@@ -3,8 +3,8 @@ package polygon
 import (
 	"context"
 	"fmt"
+	protos "github.com/coherentopensource/chain-interactor/protos/go/protos/chains/polygon"
 	model "github.com/coherentopensource/evm-etl/model/polygon"
-	protos "github.com/coherentopensource/evm-etl/protos/go/protos/chains/polygon"
 	"github.com/coherentopensource/evm-etl/shared/util"
 	"github.com/coherentopensource/go-service-framework/pool"
 	"github.com/pkg/errors"
