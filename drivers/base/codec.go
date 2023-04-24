@@ -30,6 +30,7 @@ func ProtoBlockToParquet(in *protos.Block) *model.ParquetBlock {
 		GasUsed:          in.GasUsed,
 		Timestamp:        in.Timestamp,
 		MixHash:          in.MixHash,
+		MaxFeePerGas:     in.GetMaxFeePerGas(),
 	}
 
 	for _, uncle := range in.Uncles {
