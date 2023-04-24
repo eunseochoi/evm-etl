@@ -3,7 +3,7 @@ package base
 import (
 	"context"
 	"fmt"
-	protos "github.com/coherentopensource/evm-etl/protos/go/protos/chains/base"
+	protos "github.com/coherentopensource/chain-interactor/protos/go/protos/chains/base"
 	"github.com/coherentopensource/go-service-framework/pool"
 	"github.com/coherentopensource/go-service-framework/retry"
 )

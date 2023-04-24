@@ -5,8 +5,8 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	protos "github.com/coherentopensource/chain-interactor/protos/go/protos/chains/ethereum"
 	model "github.com/coherentopensource/evm-etl/model/ethereum"
-	protos "github.com/coherentopensource/evm-etl/protos/go/protos/chains/ethereum"
 	"github.com/pkg/errors"
 )
 

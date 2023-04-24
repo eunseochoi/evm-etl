@@ -3,7 +3,7 @@ package base
 import (
 	"context"
 	"errors"
-	protos "github.com/coherentopensource/evm-etl/protos/go/protos/chains/base"
+	protos "github.com/coherentopensource/chain-interactor/protos/go/protos/chains/base"
 	"github.com/coherentopensource/go-service-framework/pool"
 )
 

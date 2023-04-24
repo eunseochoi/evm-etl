@@ -2,7 +2,7 @@ package ethereum
 
 import (
 	"context"
-	protos "github.com/coherentopensource/evm-etl/protos/go/protos/chains/ethereum"
+	protos "github.com/coherentopensource/chain-interactor/protos/go/protos/chains/ethereum"
 	"github.com/coherentopensource/go-service-framework/pool"
 	"github.com/coherentopensource/go-service-framework/retry"
 )

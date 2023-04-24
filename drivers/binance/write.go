@@ -3,8 +3,8 @@ package binance
 import (
 	"context"
 	"fmt"
+	protos "github.com/coherentopensource/chain-interactor/protos/go/protos/chains/binance"
 	model "github.com/coherentopensource/evm-etl/model/binance"
-	protos "github.com/coherentopensource/evm-etl/protos/go/protos/chains/binance"
 	"github.com/coherentopensource/evm-etl/shared/util"
 	"github.com/coherentopensource/go-service-framework/pool"
 	"github.com/pkg/errors"

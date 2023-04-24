@@ -4,8 +4,8 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	protos "github.com/coherentopensource/chain-interactor/protos/go/protos/chains/base"
 	model "github.com/coherentopensource/evm-etl/model/base"
-	protos "github.com/coherentopensource/evm-etl/protos/go/protos/chains/base"
 )
 
 // ProtoBlockToParquet converts a block proto to parquet

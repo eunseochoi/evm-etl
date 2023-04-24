@@ -3,7 +3,7 @@ package optimism
 import (
 	"context"
 	"errors"
-	protos "github.com/coherentopensource/evm-etl/protos/go/protos/chains/optimism"
+	protos "github.com/coherentopensource/chain-interactor/protos/go/protos/chains/optimism"
 	"github.com/coherentopensource/go-service-framework/pool"
 )
 
