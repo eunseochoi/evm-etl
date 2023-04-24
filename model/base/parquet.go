@@ -22,7 +22,6 @@ type ParquetBlock struct {
 	Uncles           []string `parquet:"name=uncles, type=MAP, convertedtype=LIST, valuetype=BYTE_ARRAY, valueconvertedtype=UTF8"`
 	BaseFeePerGas    string   `parquet:"name=base_fee_per_gas, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
 	MixHash          string   `parquet:"name=mix_hash, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
-	MaxFeePerGas     string   `parquet:"name=max_fee_per_gas, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
 }
 
 // ParquetTransaction represents a transaction in parquet form
@@ -54,6 +53,7 @@ type ParquetTransaction struct {
 	L1GasPrice        string `parquet:"name=l1_gas_price, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
 	L1GasUsed         string `parquet:"name=l1_gas_used, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
 	Type              string `parquet:"name=type, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
+	MaxFeePerGas      string `parquet:"name=max_fee_per_gas, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
 }
 
 // ParquetLog represents a log in parquet form
