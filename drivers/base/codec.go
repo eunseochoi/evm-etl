@@ -3,9 +3,11 @@ package base
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	protos "github.com/coherentopensource/chain-interactor/protos/go/protos/chains/base"
 	model "github.com/coherentopensource/evm-etl/model/base"
+	"github.com/pkg/errors"
 )
 
 // ProtoBlockToParquet converts a block proto to parquet
@@ -71,6 +73,13 @@ func ProtoTransactionToParquet(inTx *protos.Transaction, inReceipt *protos.Trans
 		L1GasPrice:           inReceipt.L1GasPrice,
 		L1GasUsed:            inReceipt.L1GasUsed,
 		Type:                 inReceipt.Type,
+	}
+	for _, access := range inTx.GetAccessList() {
+		accessJSON, err := json.Marshal(access)
+		if err != nil {
+			return nil, errors.Errorf("failed to convert struct to json: %v", err)
+		}
+		out.AccessList = append(out.AccessList, string(accessJSON))
 	}
 
 	return &out, nil
