@@ -73,6 +73,7 @@ func ProtoTransactionToParquet(inTx *protos.Transaction, inReceipt *protos.Trans
 		L1GasPrice:           inReceipt.L1GasPrice,
 		L1GasUsed:            inReceipt.L1GasUsed,
 		Type:                 inReceipt.Type,
+		DepositNonce:         inReceipt.GetDepositNonce(),
 	}
 	for _, access := range inTx.GetAccessList() {
 		accessJSON, err := json.Marshal(access)
