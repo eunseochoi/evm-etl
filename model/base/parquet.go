@@ -56,6 +56,7 @@ type ParquetTransaction struct {
 	MaxFeePerGas         string   `parquet:"name=max_fee_per_gas, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
 	MaxPriorityFeePerGas string   `parquet:"name=max_priority_fee_per_gas, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
 	AccessList           []string `parquet:"name=access_list, type=MAP, convertedtype=LIST, valuetype=BYTE_ARRAY, valueconvertedtype=UTF8"`
+	DepositNonce         string   `parquet:"name=deposit_nonce, type=BYTE_ARRAY, convertedtype=UTF8, encoding=PLAIN_DICTIONARY"`
 }
 
 // ParquetLog represents a log in parquet form
