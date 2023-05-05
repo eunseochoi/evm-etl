@@ -9,8 +9,8 @@ import (
 )
 
 type blockAndReceiptWrapper struct {
-	block   *protos.Block
-	receipt *protos.TransactionReceipt
+	block    *protos.Block
+	receipts []*protos.TransactionReceipt
 }
 
 // FetchSequence defines the parallelizable steps in the fetch sequence
@@ -71,7 +71,6 @@ func (d *Driver) getTransactionReceipt(ctx context.Context, txHash string) (*pro
 			d.logger.Warnf("error thrown while trying to retrieve transaction receipt: %d, %v", txHash, err)
 			return err
 		}
-
 		return nil
 	}, nil); err != nil {
 		d.logger.Errorf("max retries exceeded trying to get block by number: %v", err)
@@ -120,11 +119,15 @@ func (d *Driver) queueGetBlockAndTxReceiptByNumber(blockHeight uint64) pool.Runn
 			return nil, fmt.Errorf("no transactions present in block %d", blockHeight)
 		}
 
-		txReceipt, err := d.getTransactionReceipt(ctx, block.Transactions[0].Hash)
-		if err != nil {
-			return nil, err
+		receipts := make([]*protos.TransactionReceipt, 0)
+		for _, tx := range block.Transactions {
+			txReceipt, err := d.getTransactionReceipt(ctx, tx.Hash)
+			if err != nil {
+				d.logger.Errorf("error fetching transaction receipt with hash: %s, %v", tx.Hash, err)
+			}
+			receipts = append(receipts, txReceipt)
 		}
 
-		return &blockAndReceiptWrapper{block: block, receipt: txReceipt}, nil
+		return &blockAndReceiptWrapper{block: block, receipts: receipts}, nil
 	}
 }
