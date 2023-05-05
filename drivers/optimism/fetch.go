@@ -6,11 +6,12 @@ import (
 	protos "github.com/coherentopensource/chain-interactor/protos/go/protos/chains/optimism"
 	"github.com/coherentopensource/go-service-framework/pool"
 	"github.com/coherentopensource/go-service-framework/retry"
+	"sync"
 )
 
 type blockAndReceiptWrapper struct {
-	block   *protos.Block
-	receipt *protos.TransactionReceipt
+	block    *protos.Block
+	receipts []*protos.TransactionReceipt
 }
 
 // FetchSequence defines the parallelizable steps in the fetch sequence
@@ -33,7 +34,7 @@ func (d *OptimismDriver) GetChainTipNumber(ctx context.Context) (uint64, error) 
 		}
 		return nil
 	}, nil); err != nil {
-		d.logger.Errorf("Max retries exceeded trying to get chaintip number: %v", err)
+		d.logger.Errorf("max retries exceeded trying to get chaintip number: %v", err)
 		return 0, err
 	}
 
@@ -53,7 +54,7 @@ func (d *OptimismDriver) getBlockByNumber(ctx context.Context, blockHeight uint6
 
 		return nil
 	}, nil); err != nil {
-		d.logger.Errorf("Max retries exceeded trying to get block by number: %v", err)
+		d.logger.Errorf("max retries exceeded trying to get block by number: %v", err)
 		return nil, err
 	}
 
@@ -71,10 +72,9 @@ func (d *OptimismDriver) getTransactionReceipt(ctx context.Context, txHash strin
 			d.logger.Warnf("error thrown while trying to retrieve transaction receipt: %d, %v", txHash, err)
 			return err
 		}
-
 		return nil
 	}, nil); err != nil {
-		d.logger.Errorf("Max retries exceeded trying to get block by number: %v", err)
+		d.logger.Errorf("max retries exceeded trying to get block by number: %v", err)
 		return nil, err
 	}
 
@@ -94,7 +94,7 @@ func (d *OptimismDriver) getBlockTraceByNumber(ctx context.Context, blockHeight 
 
 		return nil
 	}, nil); err != nil {
-		d.logger.Errorf("Max retries exceeded trying to get traces: %v", err)
+		d.logger.Errorf("max retries exceeded trying to get traces: %v", err)
 		return nil, err
 	}
 
@@ -117,14 +117,26 @@ func (d *OptimismDriver) queueGetBlockAndTxReceiptByNumber(blockHeight uint64) p
 		}
 
 		if len(block.Transactions) == 0 {
-			return nil, fmt.Errorf("No transactions present in block %d", blockHeight)
+			return nil, fmt.Errorf("no transactions present in block %d", blockHeight)
 		}
 
-		txReceipt, err := d.getTransactionReceipt(ctx, block.Transactions[0].Hash)
-		if err != nil {
-			return nil, err
-		}
+		receipts := make([]*protos.TransactionReceipt, len(block.Transactions))
 
-		return &blockAndReceiptWrapper{block: block, receipt: txReceipt}, nil
+		var wg sync.WaitGroup
+		wg.Add(len(block.Transactions))
+		for index, transaction := range block.Transactions {
+			go func(ctx context.Context, i int, tx *protos.Transaction) {
+				defer wg.Done()
+				txReceipt, err := d.getTransactionReceipt(ctx, tx.Hash)
+				if err != nil {
+					d.logger.Errorf("error fetching transaction receipt with hash: %s, %v", tx.Hash, err)
+				}
+				receipts[i] = txReceipt
+			}(ctx, index, transaction)
+
+		}
+		wg.Wait()
+
+		return &blockAndReceiptWrapper{block: block, receipts: receipts}, nil
 	}
 }
