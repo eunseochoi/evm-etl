@@ -13,7 +13,7 @@ func (d *OptimismDriver) Accumulate(res interface{}) pool.Runner {
 	return func(ctx context.Context) (interface{}, error) {
 		set, ok := res.(pool.ResultSet)
 		if !ok {
-			return nil, errors.New("Result is not expected type")
+			return nil, errors.New("result is not expected type")
 		}
 
 		block, receipts, err := extractBlockAndReceipts(set)
@@ -41,21 +41,21 @@ func extractBlockAndReceipts(set pool.ResultSet) (*protos.Block, []*protos.Trans
 	}
 	wrapper, ok := blockRes.(*blockAndReceiptWrapper)
 	if !ok {
-		return nil, nil, errors.New("Incorrect data type for block/receipt wrapper")
+		return nil, nil, errors.New("incorrect data type for block/receipt wrapper")
 	}
 
-	return wrapper.block, []*protos.TransactionReceipt{wrapper.receipt}, nil
+	return wrapper.block, wrapper.receipts, nil
 }
 
 // extractTraces extracts traces from the generic ResultSet from the fetch step
 func extractTraces(set pool.ResultSet) ([]*protos.CallTrace, error) {
 	tracesRes, ok := set[stageFetchTraces]
 	if !ok {
-		return nil, errors.New("No traces data")
+		return nil, errors.New("no traces data")
 	}
 	traces, ok := tracesRes.([]*protos.CallTrace)
 	if !ok {
-		return nil, errors.New("Incorrect data type for traces")
+		return nil, errors.New("incorrect data type for traces")
 	}
 
 	return traces, nil
