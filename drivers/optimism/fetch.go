@@ -6,6 +6,7 @@ import (
 	protos "github.com/coherentopensource/chain-interactor/protos/go/protos/chains/optimism"
 	"github.com/coherentopensource/go-service-framework/pool"
 	"github.com/coherentopensource/go-service-framework/retry"
+	"sync"
 )
 
 type blockAndReceiptWrapper struct {
@@ -119,14 +120,22 @@ func (d *OptimismDriver) queueGetBlockAndTxReceiptByNumber(blockHeight uint64) p
 			return nil, fmt.Errorf("no transactions present in block %d", blockHeight)
 		}
 
-		receipts := make([]*protos.TransactionReceipt, 0)
-		for _, tx := range block.Transactions {
-			txReceipt, err := d.getTransactionReceipt(ctx, tx.Hash)
-			if err != nil {
-				d.logger.Errorf("error fetching transaction receipt with hash: %s, %v", tx.Hash, err)
-			}
-			receipts = append(receipts, txReceipt)
+		receipts := make([]*protos.TransactionReceipt, len(block.Transactions))
+
+		var wg sync.WaitGroup
+		wg.Add(len(block.Transactions))
+		for index, transaction := range block.Transactions {
+			go func(ctx context.Context, i int, tx *protos.Transaction) {
+				defer wg.Done()
+				txReceipt, err := d.getTransactionReceipt(ctx, tx.Hash)
+				if err != nil {
+					d.logger.Errorf("error fetching transaction receipt with hash: %s, %v", tx.Hash, err)
+				}
+				receipts[i] = txReceipt
+			}(ctx, index, transaction)
+
 		}
+		wg.Wait()
 
 		return &blockAndReceiptWrapper{block: block, receipts: receipts}, nil
 	}
