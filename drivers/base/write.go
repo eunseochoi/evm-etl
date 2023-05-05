@@ -67,12 +67,12 @@ func (d *Driver) parquetAndUploadTransactions(res interface{}) pool.Runner {
 		var outputs []interface{}
 
 		if len(block.TransactionReceipts) != len(block.TransactionReceipts) {
-			d.logger.Warnf("block %d has %d transactions but %d receipts", blockNumber, len(block.Block.Transactions), len(block.TransactionReceipts))
+			return nil, errors.New(fmt.Sprintf("block %d has %d transactions but %d receipts", blockNumber, len(block.Block.Transactions), len(block.TransactionReceipts)))
 		}
 
-		for i, tx := range block.Block.Transactions {
+		for i := range block.Block.Transactions {
 			if i < len(block.TransactionReceipts) {
-				parquetTransaction, err := ProtoTransactionToParquet(tx, block.TransactionReceipts[i])
+				parquetTransaction, err := ProtoTransactionToParquet(block.Block.Transactions[i], block.TransactionReceipts[i])
 				if err != nil {
 					return nil, err
 				}

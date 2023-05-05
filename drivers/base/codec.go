@@ -43,6 +43,9 @@ func ProtoBlockToParquet(in *protos.Block) *model.ParquetBlock {
 
 // ProtoTransactionToParquet converts a transaction proto to parquet, given a transaction and receipt
 func ProtoTransactionToParquet(inTx *protos.Transaction, inReceipt *protos.TransactionReceipt) (*model.ParquetTransaction, error) {
+	if inReceipt.TransactionHash != inTx.Hash {
+		return nil, errors.New("transaction and receipt hashes do not match")
+	}
 	out := model.ParquetTransaction{
 		BlockNumber:          inTx.BlockNumber,
 		BlockHash:            inTx.BlockHash,
