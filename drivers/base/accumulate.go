@@ -44,7 +44,7 @@ func extractBlockAndReceipts(set pool.ResultSet) (*protos.Block, []*protos.Trans
 		return nil, nil, errors.New("incorrect data type for block/receipt wrapper")
 	}
 
-	return wrapper.block, []*protos.TransactionReceipt{wrapper.receipt}, nil
+	return wrapper.block, wrapper.receipts, nil
 }
 
 // extractTraces extracts traces from the generic ResultSet from the fetch step

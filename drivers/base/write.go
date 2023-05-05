@@ -106,7 +106,6 @@ func (d *Driver) parquetAndUploadLogs(res interface{}) pool.Runner {
 		var outputs []interface{}
 		for _, receipt := range block.TransactionReceipts {
 			for _, log := range receipt.Logs {
-				d.logger.Infof("log: %v", log)
 				outputs = append(outputs, ProtoLogToParquet(log))
 			}
 		}
