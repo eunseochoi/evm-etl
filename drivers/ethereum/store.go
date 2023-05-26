@@ -41,3 +41,25 @@ func (s *store) RetrieveBlock(ctx context.Context, blockHeight uint64) (*model.P
 
 	return &block[0], nil
 }
+
+func (s *store) CheckForTrace(ctx context.Context, blockHeight uint64) (bool, error) {
+	filename := fmt.Sprintf("traces/%s/%d.parquet", util.RangeName(blockHeight, s.innerStore.RangeSize()), blockHeight)
+	fr, err := gcs.NewGcsFileReader(ctx, s.innerStore.ProjectID(), s.innerStore.Bucket(), filename)
+	if err != nil {
+		return false, err
+	}
+	defer fr.Close()
+
+	pr, err := reader.NewParquetReader(fr, new(model.ParquetTrace), 4)
+	if err != nil {
+		return false, err
+	}
+	defer pr.ReadStop()
+
+	//	We expect 1 row - make sure there is at least 1 and take the first 1
+	if pr.GetNumRows() == 0 {
+		return false, nil
+	}
+
+	return true, nil
+}
