@@ -235,7 +235,7 @@ func (e *EthereumDriver) parquetAndUploadTraces(res interface{}) pool.Runner {
 			return nil, err
 		}
 
-		e.logger.Infof("successfully parqueted logs for %d", blockNumber)
+		e.logger.Infof("successfully parqueted traces for %d", blockNumber)
 
 		return nil, nil
 	}
