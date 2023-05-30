@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go/storage v1.27.0
 	github.com/caarlos0/env/v7 v7.1.0
 	github.com/coherentopensource/chain-interactor v0.0.10-0.20230504195445-5910880ccb0c
-	github.com/coherentopensource/go-service-framework v0.0.12
+	github.com/coherentopensource/go-service-framework v0.0.14-0.20230526204416-c501c07400e3
 	github.com/pkg/errors v0.9.1
 	github.com/xitongsys/parquet-go v1.6.2
 	github.com/xitongsys/parquet-go-source v0.0.0-20230312005205-fbbcdea5f512
@@ -46,12 +46,12 @@ require (
 	github.com/tklauser/go-sysconf v0.3.5 // indirect
 	github.com/tklauser/numcpus v0.2.2 // indirect
 	go.opencensus.io v0.24.0 // indirect
-	golang.org/x/crypto v0.1.0 // indirect
+	golang.org/x/crypto v0.6.0 // indirect
 	golang.org/x/net v0.8.0 // indirect
 	golang.org/x/oauth2 v0.4.0 // indirect
 	golang.org/x/sys v0.6.0 // indirect
 	golang.org/x/text v0.8.0 // indirect
-	golang.org/x/time v0.1.0 // indirect
+	golang.org/x/time v0.3.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/api v0.107.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect

@@ -38,6 +38,9 @@ func (e *EthereumDriver) Writers() []pool.FeedTransformer {
 // parquetAndUploadBlock writes parquet to storage for a block
 func (e *EthereumDriver) parquetAndUploadBlock(res interface{}) pool.Runner {
 	return func(ctx context.Context) (interface{}, error) {
+		if e.config.IsTraceBackfill {
+			return nil, nil
+		}
 		block, blockNumber, err := unpackBlock(res)
 		if err != nil {
 			return nil, err
@@ -56,6 +59,9 @@ func (e *EthereumDriver) parquetAndUploadBlock(res interface{}) pool.Runner {
 // parquetAndUploadWithdrawals writes parquet to storage for withdrawals
 func (e *EthereumDriver) parquetAndUploadWithdrawals(res interface{}) pool.Runner {
 	return func(ctx context.Context) (interface{}, error) {
+		if e.config.IsTraceBackfill {
+			return nil, nil
+		}
 		block, blockNumber, err := unpackBlock(res)
 		if err != nil {
 			return nil, err
@@ -84,6 +90,9 @@ func (e *EthereumDriver) parquetAndUploadWithdrawals(res interface{}) pool.Runne
 // parquetAndUploadTransactions writes parquet to storage for transactions
 func (e *EthereumDriver) parquetAndUploadTransactions(res interface{}) pool.Runner {
 	return func(ctx context.Context) (interface{}, error) {
+		if e.config.IsTraceBackfill {
+			return nil, nil
+		}
 		block, blockNumber, err := unpackBlock(res)
 		if err != nil {
 			return nil, err
@@ -116,6 +125,9 @@ func (e *EthereumDriver) parquetAndUploadTransactions(res interface{}) pool.Runn
 // parquetAndUploadLogs writes parquet to storage for logs
 func (e *EthereumDriver) parquetAndUploadLogs(res interface{}) pool.Runner {
 	return func(ctx context.Context) (interface{}, error) {
+		if e.config.IsTraceBackfill {
+			return nil, nil
+		}
 		block, blockNumber, err := unpackBlock(res)
 		if err != nil {
 			return nil, err
@@ -153,6 +165,13 @@ func (e *EthereumDriver) parquetAndUploadTraces(res interface{}) pool.Runner {
 
 		if len(block.Block.Transactions) == 0 || len(block.CallTraces) == 0 {
 			return nil, nil
+		}
+
+		if e.config.IsTraceBackfill {
+			hasTrace, err := e.store.CheckForTrace(ctx, blockNumber)
+			if err != nil && hasTrace {
+				return nil, nil
+			}
 		}
 
 		//	Filter null=>null transactions and ensure transaction and trace counts match

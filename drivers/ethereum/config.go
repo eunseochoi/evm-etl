@@ -7,8 +7,9 @@ import (
 
 // Config stores configurable properties of the driver
 type Config struct {
-	MaxRetries     int    `env:"HTTP_MAX_RETRIES" envDefault:"10"`
-	DirectoryRange uint64 `env:"BUCKET_DIRECTORY_RANGE" envDefault:"10000"`
+	MaxRetries      int    `env:"HTTP_MAX_RETRIES" envDefault:"10"`
+	DirectoryRange  uint64 `env:"BUCKET_DIRECTORY_RANGE" envDefault:"10000"`
+	IsTraceBackfill bool   `env:"IS_TRACE_BACKFILL" envDefault:"false"`
 }
 
 // MustParseConfig uses env.Parse to initialize config with environment variables
