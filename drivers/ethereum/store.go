@@ -58,7 +58,7 @@ func (s *store) CheckForTrace(ctx context.Context, blockHeight uint64) (bool, er
 
 	//	We expect 1 row - make sure there is at least 1 and take the first 1
 	if pr.GetNumRows() == 0 {
-		return false, nil
+		return true, nil
 	}
 
 	return true, nil
