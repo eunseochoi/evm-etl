@@ -5,8 +5,8 @@ go 1.20
 require (
 	cloud.google.com/go/storage v1.27.0
 	github.com/caarlos0/env/v7 v7.1.0
-	github.com/coherentopensource/chain-interactor v0.0.10-0.20230504195445-5910880ccb0c
-	github.com/coherentopensource/go-service-framework v0.0.14-0.20230526204416-c501c07400e3
+	github.com/coherentopensource/chain-interactor v0.0.10-0.20230602151837-4c7a42006f05
+	github.com/coherentopensource/go-service-framework v0.0.14-0.20230605204212-dabf9a164af6
 	github.com/pkg/errors v0.9.1
 	github.com/xitongsys/parquet-go v1.6.2
 	github.com/xitongsys/parquet-go-source v0.0.0-20230312005205-fbbcdea5f512
