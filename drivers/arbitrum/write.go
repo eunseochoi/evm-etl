@@ -31,6 +31,7 @@ func (d *Driver) Writers() []pool.FeedTransformer {
 		d.parquetAndUploadTransactions,
 		d.parquetAndUploadTraces,
 		d.parquetAndUploadLogs,
+		d.parquetAndUploadTransfers,
 	}
 }
 
@@ -121,6 +122,73 @@ func (d *Driver) parquetAndUploadLogs(res interface{}) pool.Runner {
 	}
 }
 
+// parquetAndUploadTransfers writes parquet to storage for EVMTransers embedded within traces
+func (d *Driver) parquetAndUploadTransfers(res interface{}) pool.Runner {
+	return func(ctx context.Context) (interface{}, error) {
+		block, blockNumber, err := unpackBlock(res)
+		if err != nil {
+			return nil, err
+		}
+
+		if len(block.Block.Transactions) == 0 || len(block.CallTraces) == 0 {
+			return nil, nil
+		}
+
+		//	Filter null=>null transactions and ensure transaction and trace counts match
+		filteredTx := filterNonTraceTransactions(block.Block.Transactions)
+		if len(filteredTx) != len(block.CallTraces) {
+			return nil, errors.Errorf("transactions and traces count don't match for block: %d %d != %d", blockNumber, len(filteredTx), len(block.CallTraces))
+		}
+
+		var bfsWG sync.WaitGroup
+		var transferOutputs []interface{}
+		mutex := sync.Mutex{}
+		for i, callTrace := range block.CallTraces {
+			bfsWG.Add(1)
+			go func(index int, callTrace *protos.CallTrace) {
+				defer bfsWG.Done()
+				for idx, transfer := range callTrace.Result.BeforeEVMTransfers {
+					mutex.Lock()
+					transferOutputs = append(
+						transferOutputs,
+						ProtoEVMTransferToParquet(
+							transfer,
+							block.Block.Transactions[index],
+							hashCallTrace(callTrace),
+							"before",
+							int64(index),
+							int64(idx),
+						))
+					mutex.Unlock()
+				}
+				for idx, transfer := range callTrace.Result.AfterEVMTransfers {
+					mutex.Lock()
+					transferOutputs = append(
+						transferOutputs,
+						ProtoEVMTransferToParquet(
+							transfer,
+							block.Block.Transactions[index],
+							hashCallTrace(callTrace),
+							"after",
+							int64(index),
+							int64(idx),
+						))
+					mutex.Unlock()
+				}
+			}(i, callTrace)
+		}
+		bfsWG.Wait()
+		filename := fmt.Sprintf("transfers/%s/%d.parquet", util.RangeName(blockNumber, d.config.DirectoryRange), blockNumber)
+		if err := d.store.innerStore.WriteMany(ctx, transferOutputs, &model.ParquetEVMTransfer{}, filename); err != nil {
+			return nil, err
+		}
+
+		d.logger.Infof("successfully parqueted evm transfers for %d", blockNumber)
+
+		return nil, nil
+	}
+}
+
 // parquetAndUploadTraces writes parquet to storage for traces
 func (d *Driver) parquetAndUploadTraces(res interface{}) pool.Runner {
 	return func(ctx context.Context) (interface{}, error) {
@@ -141,36 +209,11 @@ func (d *Driver) parquetAndUploadTraces(res interface{}) pool.Runner {
 
 		var bfsWG sync.WaitGroup
 		var outputs []interface{}
-		var transferOutputs []interface{}
 		mutex := sync.Mutex{}
 		for i, callTrace := range block.CallTraces {
 			bfsWG.Add(1)
 			go func(index int, callTrace *protos.CallTrace) {
 				defer bfsWG.Done()
-				for idx, transfer := range callTrace.Result.BeforeEVMTransfers {
-					transferOutputs = append(
-						transferOutputs,
-						ProtoEVMTransferToParquet(
-							transfer,
-							block.Block.Transactions[index],
-							hashCallTrace(callTrace),
-							"before",
-							int64(index),
-							int64(idx),
-						))
-				}
-				for idx, transfer := range callTrace.Result.AfterEVMTransfers {
-					transferOutputs = append(
-						transferOutputs,
-						ProtoEVMTransferToParquet(
-							transfer,
-							block.Block.Transactions[index],
-							hashCallTrace(callTrace),
-							"after",
-							int64(index),
-							int64(idx),
-						))
-				}
 				queue := make([]*callTraceNode, 0)
 				queue = append(
 					queue,
@@ -219,14 +262,7 @@ func (d *Driver) parquetAndUploadTraces(res interface{}) pool.Runner {
 			return nil, err
 		}
 
-		d.logger.Infof("successfully parqueted logs for %d", blockNumber)
-
-		filename = fmt.Sprintf("transfers/%s/%d.parquet", util.RangeName(blockNumber, d.config.DirectoryRange), blockNumber)
-		if err := d.store.innerStore.WriteMany(ctx, transferOutputs, &model.ParquetEVMTransfer{}, filename); err != nil {
-			return nil, err
-		}
-
-		d.logger.Infof("successfully parqueted evm transfers for %d", blockNumber)
+		d.logger.Infof("successfully parqueted traces for %d", blockNumber)
 
 		return nil, nil
 	}
